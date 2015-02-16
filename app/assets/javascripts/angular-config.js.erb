@@ -1,4 +1,4 @@
-var app = angular.module('lolstatsdb', ['ngRoute'])
+var app = angular.module('lolstatsdb', ['ngRoute', 'ui.bootstrap'])
 
 app.config(['$routeProvider',function($routeProvider) {
 	$routeProvider.when('/',{
@@ -6,3 +6,10 @@ app.config(['$routeProvider',function($routeProvider) {
 		controller: "WelcomeCtrl"
 	})
 }]);
+
+app.directive('mainNavBar', function(){
+	return {
+		restrict: 'E',
+		templateUrl: "<%=  asset_path('partials/mainNavBarPartial.html') %>",
+	};
+});
