@@ -1,0 +1,9 @@
+app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$routeParams', function($scope, RegionTagsServices, $location, $routeParams){
+
+	$scope.regions = RegionTagsServices.region;
+	$scope.selectedRegion = $scope.regions[6];
+
+	$scope.searchSummoner = function (){
+		$location.path('/' + $scope.selectedRegion.code);
+	}
+}])

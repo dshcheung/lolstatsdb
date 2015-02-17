@@ -1,33 +1,28 @@
-nav.navbar.navbar-default {
-  background: rgb(35, 49, 64);
+@import "variables";
+
+main-nav-bar > nav.navbar.navbar-default {
+  background: $background-theme-2;
   border: none;
-  margin: 0;
   border-radius: 0;
   div.container-fluid {
-    div.collapse.navbar-collapse#navbar-collapse-items {
-      form.form-merge-background {
-        background: white;
-        border-radius: 4px;
+    div.collapse.navbar-collapse {
+      padding: 0 0 0 15px;
+      form {
         margin: 8px 0;
-        input {
-          border: none;
-          box-shadow: none;
+        div {
+          background:white;
+          height: 34px;
+          padding: 6px;
+          input {
+            border: none;
+          }
         }
-        @media screen and (max-width: 767px){
-        	input {
-        		width: calc(100vw - 248px);
-        	}
-        }
-        button.btn.btn-primary {
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
+        button{
+          border-radius: 0;
         }
       }
-      ul.nav.navbar-nav {
-      	text-align: center;
-        li a {
-          color: white;
-        }
+      ul > li > a {
+        color: white;
       }
     }
   }
