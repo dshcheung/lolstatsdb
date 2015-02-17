@@ -2,6 +2,7 @@ app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$route
 
   $scope.regions = RegionTagsServices.region;
   $scope.selectedRegion = $scope.regions[6];
+  $scope.logoPath = "<%=  asset_path('logo.png') %>"
 
   $scope.searchSummoner = function (){
     var data = {

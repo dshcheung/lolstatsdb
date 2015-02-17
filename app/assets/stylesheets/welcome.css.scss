@@ -1,8 +1,17 @@
 main.welcome-page {
   text-align: center;
   section {
+    div.banner-img {
+      margin: 0 0 20px;
+      background-image: url('banner.jpg');
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 198px;
+      width: auto;
+    }
     form {
       div {
+        display: inline;
         background: white;
         height: 34px;
         padding: 6px;
@@ -12,6 +21,20 @@ main.welcome-page {
       }
       button {
         border-radius: 0;
+      }
+      @media screen and (max-width: 767px){
+        div {
+          display: inline;
+          background: white;
+          height: 34px;
+          padding: 8px 6px 10px;
+          input {
+            border: none;
+          }
+        }
+        button {
+          margin: 0 0 0 5px;
+        }
       }
     }
   }
