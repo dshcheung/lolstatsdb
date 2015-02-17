@@ -1,9 +1,17 @@
-app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$routeParams', function($scope, RegionTagsServices, $location, $routeParams){
+app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$routeParams', '$http', function($scope, RegionTagsServices, $location, $routeParams, $http){
 
 	$scope.regions = RegionTagsServices.region;
 	$scope.selectedRegion = $scope.regions[6];
 
 	$scope.searchSummoner = function (){
-		$location.path('/' + $scope.selectedRegion.code);
+		var data = {
+			'summoner': $scope.$$childHead.summoner,
+			'region': $scope.$$childHead.selectedRegion.code
+		}
+
+		$http.post('/summoner', data).success(function(response){
+			console.log(response);
+	  //   $location.path('/' + $scope.selectedRegion.code + '/' + response.id);
+		})
 	}
 }])
