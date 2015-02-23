@@ -13,7 +13,7 @@
     <div class="collapse navbar-collapse" id="navbar-collapse-items">
       <form class="form-inline navbar-right" ng-submit="searchSummoner()">
         <div class="form-group">
-          <input type="text" placeholder="Summoner Name" ng-model="summoner">
+          <input type="text" placeholder="Summoner Name" ng-model="summoner.name">
           <select ng-selected="6" ng-model="selectedRegion" ng-options="region.code for region in regions">
           </select>
         </div>
