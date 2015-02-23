@@ -6,13 +6,13 @@ class SummonersController < ApplicationController
 
     @tries = 0
     begin
-      url = "https://#{params['region']}.api.pvp.net/api/lol/#{params['region']}/v1.4/summoner/by-name/#{params['summoner']}?api_key=#{ENV['API_KEY']}"
+      url = "https://#{params['region']}.api.pvp.net/api/lol/#{params['region']}/v1.4/summoner/by-name/#{params['summoner'].downcase}?api_key=#{ENV['API_KEY']}"
       response = JSON.parse(open(url).read)
 
       if response.empty?
         render json: {success: true, summoner: nil}, status: 200
       else
-        render json: {success: true, summoner: response["#{params['summoner']}"]}, status: 200
+        render json: {success: true, summoner: response["#{params['summoner'].downcase}"]}, status: 200
       end
 
     rescue OpenURI::HTTPError => e
