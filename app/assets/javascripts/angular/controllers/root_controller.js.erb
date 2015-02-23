@@ -12,7 +12,7 @@ app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$route
 
     $http.post('/summoner', data).success(function(response){
       console.log(response);
-    //   $location.path('/' + $scope.selectedRegion.code + '/' + response.id);
+      $location.path('/' + $scope.selectedRegion.code + '/' + '12312');
     })
   }
 }])
