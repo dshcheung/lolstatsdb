@@ -14,5 +14,9 @@
  *= require_self
  */
 
+@import "variables";
 @import "bootstrap-sprockets";
 @import "bootstrap";
+.body {
+  background: $background-theme-1;
+}

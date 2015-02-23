@@ -1,0 +1,18 @@
+app.factory('RegionTagsServices', ['$http', function($http){
+  var regionTags = {};
+
+  regionTags.region = [
+    {'name': 'Brazil', 'code': 'BR'},
+    {'name': 'Europe Nordic & East', 'code': 'EUNE'},
+    {'name': 'Europe West', 'code': 'EUW'},
+    {'name': 'Korea', 'code': 'KR'},
+    {'name': 'Latin America North', 'code': 'LAN'},
+    {'name': 'Latin America South', 'code': 'LAS'},
+    {'name': 'North America', 'code': 'NA'},
+    {'name': 'Oceania', 'code': 'OCE'},
+    {'name': 'Russia', 'code': 'RU'},
+    {'name': 'Turkey', 'code': 'TR'}
+  ]
+
+  return regionTags;
+}])
