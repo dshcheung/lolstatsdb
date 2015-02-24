@@ -1,7 +1,16 @@
 app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$routeParams', '$http', function($scope, RegionTagsServices, $location, $routeParams, $http){
 
   $scope.regions = RegionTagsServices.region;
-  $scope.selectedRegion = $scope.regions[6];
+  var regionCode = $location.path().split('/')
+  if (regionCode[2] != undefined){
+    for(var i = 0; i < 10; i++){
+      if ($scope.regions[i].code == regionCode[2]) {
+        $scope.selectedRegion = $scope.regions[i];
+      }
+    }
+  } else {
+    $scope.selectedRegion = $scope.regions[6];
+  }
   $scope.logoPath = "<%=  asset_path('logo.png') %>";
   $scope.summoner = {};
 
@@ -14,7 +23,7 @@ app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$route
     $http.post('/summoner', data).success(function(response){
       console.log(response);
       if (response.summoner != null){
-        $location.path('/' + $scope.selectedRegion.code + '/' + response.summoner.id);
+        $location.path('/summoner/' + $scope.selectedRegion.code + '/' + response.summoner.id);
       } else {
         //noty here
         //no summoner with this name
@@ -24,5 +33,16 @@ app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$route
       //noty here
       //something is wrong with riot's server, please try again later
     })
+  }
+
+  $scope.changeRegion = function (region){
+    $scope.selectedRegion = region.region;
+    console.log($scope.summoner.name);
+
+    if ($scope.summoner.name != undefined){
+      $scope.searchSummoner();
+    } else {
+      $location.path('/summoner/' + $scope.selectedRegion.code);
+    }
   }
 }])

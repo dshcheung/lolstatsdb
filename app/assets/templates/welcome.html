@@ -7,8 +7,15 @@
       <form class="form-inline" ng-submit="searchSummoner()">
         <div class="form-group">
           <input type="text" placeholder="Summoner Name" ng-model="summoner.name">
-          <select ng-selected="6" ng-model="selectedRegion" ng-options="region.code for region in regions">
-          </select>
+          <button type="button" data-toggle="dropdown">
+            {{selectedRegion.code}}
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <div ng-repeat="region in regions" class="row">
+              <li class="col-xs-8"><a href="" ng-click="changeRegion(this)">{{region.code}}</a></li>
+              <li class="col-xs-4"><i class="fa fa-check"></i></li>
+            </div>
+          </ul>
         </div>
         <button class="btn btn-primary">Search</button>
       </form>
