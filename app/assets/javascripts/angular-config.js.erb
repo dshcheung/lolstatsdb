@@ -1,15 +1,18 @@
 var app = angular.module('lolstatsdb', ['ngRoute', 'ui.bootstrap'])
 
 app.config(['$routeProvider',function($routeProvider) {
-	$routeProvider.when('/',{
-		templateUrl: "<%=  asset_path('welcome.html') %>",
-		controller: "WelcomeCtrl"
-	})
+  $routeProvider.when('/',{
+    templateUrl: "<%= asset_path('welcome.html') %>"
+  })
+  .when('/:code/:summonerId', {
+    templateUrl: "<%= asset_path('summoner.html') %>",
+    controller: "SummonerCtrl"
+  })
 }]);
 
 app.directive('mainNavBar', function(){
-	return {
-		restrict: 'E',
-		templateUrl: "<%=  asset_path('partials/mainNavBarPartial.html') %>",
-	};
+  return {
+    restrict: 'E',
+    templateUrl: "<%=  asset_path('partials/mainNavBarPartial.html') %>",
+  };
 });
