@@ -2,17 +2,27 @@ app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$route
 
   $scope.regions = RegionTagsServices.region;
   $scope.selectedRegion = $scope.regions[6];
-  $scope.logoPath = "<%=  asset_path('logo.png') %>"
+  $scope.logoPath = "<%=  asset_path('logo.png') %>";
+  $scope.summoner = {};
 
   $scope.searchSummoner = function (){
     var data = {
-      'summoner': $scope.$$childHead.summoner,
-      'region': $scope.$$childHead.selectedRegion.code
-    }
+      'summoner': $scope.summoner.name,
+      'region': $scope.selectedRegion.code
+    };
 
     $http.post('/summoner', data).success(function(response){
       console.log(response);
-    //   $location.path('/' + $scope.selectedRegion.code + '/' + response.id);
+      if (response.summoner != null){
+        $location.path('/' + $scope.selectedRegion.code + '/' + response.summoner.id);
+      } else {
+        //noty here
+        //no summoner with this name
+      }
+    }).error(function(response){
+      console.log(response);
+      //noty here
+      //something is wrong with riot's server, please try again later
     })
   }
 }])

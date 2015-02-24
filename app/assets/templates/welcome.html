@@ -1,11 +1,11 @@
 <main-nav-bar></main-nav-bar>
 
-<main class="container-fluid welcome-page">
+<main class="container welcome-page">
   <section class="row">
     <div class="banner-img"></div>
     <form class="form-inline" ng-submit="searchSummoner()">
       <div class="form-group">
-        <input type="text" placeholder="Summoner Name" ng-model="summoner">
+        <input type="text" placeholder="Summoner Name" ng-model="summoner.name">
         <select ng-selected="6" ng-model="selectedRegion" ng-options="region.code for region in regions">
         </select>
       </div>
