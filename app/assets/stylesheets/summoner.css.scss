@@ -1,0 +1,66 @@
+@import "variables";
+
+div.summoner-page {
+  header.container {
+    margin: auto;
+    background-color: $background-theme-2;
+    div {
+      padding: 0;
+    }
+    div.profile-icon {
+      margin-top: 10px;
+      height:120px;
+      width: 106px;
+      display: inline-block;
+      img {
+        padding: 10px 5px;
+      }
+      img.profileIcon {
+        height: 105px;
+        width: auto;
+      }
+      img.profileBorder {
+        position: relative;
+        right: 6px;
+        bottom: 113px;
+        height: 120px;
+        width: auto;
+      }
+      div {
+        position: relative;
+        bottom: 150px;
+        left: 70px;
+        width: 20px;
+        text-align: center;
+        background: rgba(0,0,0,0.5);
+        color: white;
+        border: 1px solid rgb(44, 62, 80);
+      }
+    }
+    div.profile-name {
+      h1 {
+        color: white;
+      }
+      p {
+        color: rgb(241, 196, 15);
+      }
+    }
+    div.profile-renew {
+      width: 120px;
+      padding: 5px;
+      p {
+        font-size: 10px;
+        float: right;
+        color:white;
+        position: relative;
+        top: 60px;
+      }
+      button {
+        float: right;
+        position: relative;
+        top: 55px;
+        border-radius: 0;
+      }
+    }
+  }
+}
