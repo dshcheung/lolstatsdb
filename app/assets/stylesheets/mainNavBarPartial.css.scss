@@ -13,6 +13,21 @@ main-nav-bar > nav.navbar.navbar-default {
     ul.navbar-right{
       position: relative;
       right: 15px;
+      ul {
+        left: auto;
+        top: auto;
+        background-color: $background-theme-2;
+        div {
+          padding: 0;
+          margin: 0;
+          li > a {
+            color: white;
+          }
+          li > i {
+            color: green;
+          }
+        }
+      }
     }
   }
 }

@@ -2,10 +2,16 @@ var app = angular.module('lolstatsdb', ['ngRoute', 'ui.bootstrap'])
 
 app.config(['$routeProvider',function($routeProvider) {
   $routeProvider.when('/',{
-    templateUrl: "<%= asset_path('welcome.html') %>"
+    templateUrl: "<%= asset_path('welcome.html') %>",
   })
-  .when('/:code/:summonerId', {
+  .when('/summoner/:code/', {
+    templateUrl: "<%= asset_path('welcome.html') %>",
+  })
+  .when('/summoner/:code/:summonerId', {
     templateUrl: "<%= asset_path('summoner.html') %>",
     controller: "SummonerCtrl"
   })
+  .otherwise({
+    redirectTo: '/'
+  });
 }]);

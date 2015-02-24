@@ -24,6 +24,28 @@ sub-nav-bar > nav.navbar.navbar-default {
           border: none;
           width: 120px;
         }
+        button {
+          background-color: $background-theme-2;
+          color: white;
+          border: 1px;
+          font-size: 12px;
+          position:relative;
+          bottom: 2px;
+        }
+        ul {
+          right: auto;
+          background-color: $background-theme-2;
+          div {
+            padding: 0;
+            margin: 0;
+            li > a {
+              color: white;
+            }
+            li > i {
+              color: green;
+            }
+          }
+        }
       }
       button {
         margin: 0 0 0 5px;
