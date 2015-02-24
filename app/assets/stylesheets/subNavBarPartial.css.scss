@@ -1,0 +1,34 @@
+@import "variables";
+sub-nav-bar > nav.navbar.navbar-default {
+  background: $background-theme-1;
+  border: none;
+  border-radius: 0;
+  margin: -20px 0 0 0;
+  div.container {
+    a {
+      padding: 0 5px;
+      img {
+        margin: 8px 15px;
+        height: 34px;
+      }
+    }
+    form {
+      margin: 8px 0;
+      padding: 0 5px;
+      div {
+        display: inline;
+        background: white;
+        height: 34px;
+        padding: 9px 6px;
+        input {
+          border: none;
+          width: 120px;
+        }
+      }
+      button {
+        margin: 0 0 0 5px;
+        border-radius: 0;
+      }
+    }
+  }
+}
