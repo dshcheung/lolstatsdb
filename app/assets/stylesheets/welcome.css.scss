@@ -1,39 +1,44 @@
-main.welcome-page {
-  text-align: center;
-  section {
-    div.banner-img {
-      margin: 0 0 20px;
-      background-image: url('banner.jpg');
-      background-repeat: no-repeat;
-      background-position: center;
-      height: 198px;
-      width: auto;
-    }
-    form {
-      div {
-        display: inline;
-        background: white;
-        height: 34px;
-        padding: 6px;
-        input {
-          border: none;
-        }
+@import "variables";
+div.welcome-page {
+  background: $background-theme-1;
+  main {
+    text-align: center;
+    height: 100vh;
+    section {
+      div.banner-img {
+        margin: 0 0 20px;
+        background-image: url('banner.jpg');
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 198px;
+        width: auto;
       }
-      button {
-        border-radius: 0;
-      }
-      @media screen and (max-width: 767px){
+      form {
         div {
           display: inline;
           background: white;
           height: 34px;
-          padding: 8px 6px 10px;
+          padding: 6px;
           input {
             border: none;
           }
         }
         button {
-          margin: 0 0 0 5px;
+          border-radius: 0;
+        }
+        @media screen and (max-width: 767px){
+          div {
+            display: inline;
+            background: white;
+            height: 34px;
+            padding: 8px 6px 10px;
+            input {
+              border: none;
+            }
+          }
+          button {
+            margin: 0 0 0 5px;
+          }
         }
       }
     }

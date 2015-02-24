@@ -9,10 +9,3 @@ app.config(['$routeProvider',function($routeProvider) {
     controller: "SummonerCtrl"
   })
 }]);
-
-app.directive('mainNavBar', function(){
-  return {
-    restrict: 'E',
-    templateUrl: "<%=  asset_path('partials/mainNavBarPartial.html') %>",
-  };
-});
