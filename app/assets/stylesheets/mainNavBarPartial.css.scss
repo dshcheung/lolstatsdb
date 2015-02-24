@@ -4,38 +4,15 @@ main-nav-bar > nav.navbar.navbar-default {
   border: none;
   border-radius: 0;
   div.container {
-    div.navbar-header {
-      a {
-        padding: 0;
-        img {
-          margin: 8px 15px;
-          height: 34px;
-        }
-      }
+    ul > li > a {
+      padding: 5px;
+      color: white;
+      font-family: $font-style-1;
+      font-size: 12px;
     }
-    div.collapse.navbar-collapse {
-      padding: 0 0 0 15px;
-      text-align: center;
-      overflow: hidden;
-      form {
-        margin: 8px 0;
-        div {
-          display: inline;
-          background: white;
-          height: 34px;
-          padding: 9px 6px;
-          input {
-            border: none;
-          }
-        }
-        button {
-          margin: 0 0 0 5px;
-          border-radius: 0;
-        }
-      }
-      ul > li > a {
-        color: white;
-      }
+    ul.navbar-right{
+      position: relative;
+      right: 15px;
     }
   }
 }

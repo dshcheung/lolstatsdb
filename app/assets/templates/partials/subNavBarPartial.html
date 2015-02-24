@@ -1,0 +1,13 @@
+<nav class="navbar navbar-default">
+  <div class="container">
+    <a class="navbar-brand" href="/#/"><img src="{{logoPath}}" alt="logo"></a>
+    <form class="form-inline navbar-right" ng-submit="searchSummoner()">
+      <div class="form-group">
+        <input type="text" placeholder="Summoner Name" ng-model="summoner.name">
+        <select ng-selected="6" ng-model="selectedRegion" ng-options="region.code for region in regions">
+        </select>
+      </div>
+      <button class="btn btn-primary">Search</button>
+    </form>
+  </div>
+</nav>
