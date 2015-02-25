@@ -63,4 +63,17 @@ div.summoner-page {
       }
     }
   }
+  main.container {
+    margin: auto;
+    padding: 0;
+    section.summoner-tabs {
+      ul{
+        li {
+          a {
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
 }
