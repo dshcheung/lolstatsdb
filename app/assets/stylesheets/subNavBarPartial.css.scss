@@ -1,7 +1,9 @@
 @import "variables";
 sub-nav-bar > nav.navbar.navbar-default {
   background: $background-theme-1;
-  border: none;
+  border-width: 0 0 1px 0;
+  border-style: solid;
+  border-color: black;
   border-radius: 0;
   margin: -20px 0 0 0;
   div.container {
