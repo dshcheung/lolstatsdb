@@ -7,7 +7,7 @@ div.welcome-page {
     section {
       div.banner-img {
         margin: 0 0 20px;
-        background-image: url('banner.jpg');
+        background-image: asset-url('banner.jpg');
         background-repeat: no-repeat;
         background-position: center;
         height: 198px;
