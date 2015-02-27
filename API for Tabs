@@ -1,0 +1,20 @@
+Profile page
+/api/lol/{region}/v2.5/league/by-summoner/{summonerIds}/entry
+/api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/ranked
+/api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/summary
+
+Runes
+/api/lol/{region}/v1.4/summoner/{summonerIds}/runes
+
+Masteries
+/api/lol/{region}/v1.4/summoner/{summonerIds}/masteries
+
+Matches
+/api/lol/{region}/v2.2/matchhistory/{summonerId} (summary index)
+/api/lol/{region}/v2.2/match/{matchId} (detailed)
+
+Champtions
+/api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/ranked (recorded by Profile Page)
+
+League
+/api/lol/{region}/v2.5/league/by-summoner/{summonerIds}
