@@ -4,12 +4,12 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
   // Summoner Information
   // Set Initial Information
   $scope.summonerInfo = {};
+  $scope.summonerInfo.searchData = {
+    'id': $routeParams.summonerId,
+    'region': $scope.$parent.selectedRegion.code
+  }
   $scope.searchSummonerById = function () {
-    var data = {
-      'id': $routeParams.summonerId,
-      'region': $scope.$parent.selectedRegion.code
-    }
-    $http.post('/summoner/id', data).success(function(response){
+    $http.post('/summoner/id', $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
       $scope.summonerInfo.profileIcon = response.summoner.icon;
       $scope.summonerInfo.name = response.summoner.name;
@@ -19,7 +19,20 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
       // noty error messages
     })
   }
+  $scope.summonerInfo.league = {};
+  $scope.searchLeagueEntry = function (){
+    $http.post('/summoner/league_entry', $scope.summonerInfo.searchData).success(function(response){
+      console.log(response);
+      $scope.summonerInfo.league.team5 = response.league_entry.team5;
+      $scope.summonerInfo.league.team3 = response.league_entry.team3;
+      $scope.summonerInfo.league.solo5 = response.league_entry.solo5;
+      $scope.summonerInfo.borderIcon = response.border_icon;
+    }).error(function(response){
+      // noty error messages
+    })
+  }
   $scope.searchSummonerById();
+  $scope.searchLeagueEntry();
 
   // Tabs stuff
   $scope.tabs = {};
