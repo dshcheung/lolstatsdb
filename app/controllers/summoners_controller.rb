@@ -12,6 +12,7 @@ class SummonersController < ApplicationController
       if response.empty?
         render json: {success: true, summoner: nil}, status: 200
       else
+        response["#{params['id']}"]['icon'] = ActionController::Base.helpers.asset_path("profileIcon-" + response["#{params['id']}"]['profileIconId'].to_s + ".png")
         render json: {success: true, summoner: response["#{params['id']}"]}, status: 200
       end
     rescue OpenURI::HTTPError => e
@@ -50,6 +51,3 @@ class SummonersController < ApplicationController
     end
   end
 end
-
-
-# {"20018618":{"id":20018618,"name":"'Harunoame'","profileIconId":744,"summonerLevel":30,"revisionDate":1425002066000}}

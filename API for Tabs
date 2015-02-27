@@ -1,7 +1,8 @@
 Profile page
-/api/lol/{region}/v2.5/league/by-summoner/{summonerIds}/entry
-/api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/ranked
-/api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/summary
+/api/lol/{region}/v2.5/league/by-summoner/{summonerIds}/entry (current ranked tier)
+/api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/ranked (detailed champ stats)
+/api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/summary (KHA Minion stats)
+/api/lol/{region}/v2.2/matchhistory/{summonerId} (summary index) (for highest achieved ranked)
 
 Runes
 /api/lol/{region}/v1.4/summoner/{summonerIds}/runes

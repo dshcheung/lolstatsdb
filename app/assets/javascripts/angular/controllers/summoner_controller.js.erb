@@ -11,9 +11,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     }
     $http.post('/summoner/id', data).success(function(response){
       console.log(response);
-      // $scope.summonerInfo.profileIcon = "http://ddragon.leagueoflegends.com/cdn/5.2.1/img/profileicon/"+response.summoner.profileIconId+".png";
-      $scope.summonerInfo.profileIcon = "<%= asset_path('assets/profileIcons/profileIcon-"+response.summoner.profileIconId+".png') %>"
-      console.log("<%= asset_path('profileIcon-"+response.summoner.profileIconId+".png') %>")
+      $scope.summonerInfo.profileIcon = response.summoner.icon;
       $scope.summonerInfo.name = response.summoner.name;
       $scope.summonerInfo.level = response.summoner.summonerLevel;
       $scope.summonerInfo.id = response.summoner.id;
