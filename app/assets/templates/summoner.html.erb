@@ -7,10 +7,10 @@
     <div class="profile-icon col-xs-4">
       <img class="profileIcon" src="http://ddragon.leagueoflegends.com/cdn/5.2.1/img/profileicon/744.png">
       <img class="profileBorder" src="<%= asset_path('silverBorder.png') %>">
-      <div>{{summoner.level}}</div>
+      <div>{{summonerInfo.level}}</div>
     </div>
     <div class="profile-name col-xs-4">
-      <h1>{{summoner.name}}</h1>
+      <h1>{{summonerInfo.name}}</h1>
       <p>North America</p>
     </div>
     <div class="profile-renew pull-right col-xs-4">
@@ -21,16 +21,13 @@
   <main class="container row">
     <section class="summoner-tabs">
       <tabset justified="true">
-        <tab heading="Profile">Sdasfasd</tab>
-        <tab heading="Runes">Short Labeled Justified content</tab>
-        <tab heading="Masteries">Long Labeled Justified content</tab>
-        <tab heading="Matches">Long Labeled Justified content</tab>
-        <tab heading="Champions">Long Labeled Justified content</tab>
-        <tab heading="League">Long Labeled Justified content</tab>
+        <tab heading="Profile" select="tabs.changed('profile')" deselect="tabs.deselected('profile')"><profile-tab></profile-tab></tab>
+        <tab heading="Runes" select="tabs.changed('runes')" deselect="tabs.deselected('runes')"><runes-tab></runes-tab></tab>
+        <tab heading="Masteries" select="tabs.changed('masteries')" deselect="tabs.deselected('masteries')">Long Labeled Justified content</tab>
+        <tab heading="Matches" select="tabs.changed('matches')" deselect="tabs.deselected('matches')">Long Labeled Justified content</tab>
+        <tab heading="Champions" select="tabs.changed('champions')" deselect="tabs.deselected('champions')">Long Labeled Justified content</tab>
+        <tab heading="League" select="tabs.changed('league')" deselect="tabs.deselected('league')">Long Labeled Justified content</tab>
       </tabset>
-    </section>
-    <section class="summoner-details">
-      
     </section>
   </main>
 </div>

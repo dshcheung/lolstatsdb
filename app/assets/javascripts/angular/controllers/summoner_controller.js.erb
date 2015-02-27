@@ -1,5 +1,44 @@
 app.controller('SummonerCtrl', ['$scope', function($scope){
-  console.log("summonerctrl here", $scope);
-  $scope.summoner.name = "Harunoame";
-  $scope.summoner.level = 30;
+  // Summoner Information
+  $scope.summonerInfo = {};
+  $scope.summonerInfo.name = "Harunoame";
+  $scope.summonerInfo.level = 30;
+
+  // Tabs stuff
+  $scope.tabs = {};
+  $scope.tabs.changed = function(tabHeading){
+    $scope.tabs.status[tabHeading] = true;
+    $scope.tabs.updateInfo[tabHeading]();
+  };
+  $scope.tabs.deselected = function(tabHeading){
+    $scope.tabs.status[tabHeading] = false;
+  };
+  $scope.tabs.status = {};
+  $scope.tabs.status.profile = false;
+  $scope.tabs.status.runes = false;
+  $scope.tabs.status.masteries = false;
+  $scope.tabs.status.matches = false;
+  $scope.tabs.status.champions = false;
+  $scope.tabs.status.league = false;  
+  $scope.tabs.updateInfo = {};
+  $scope.tabs.updateInfo.profile = function (){
+    console.log("updating profile");
+  };
+  $scope.tabs.updateInfo.runes = function (){
+    console.log("updating runes");
+  };
+  $scope.tabs.updateInfo.masteries = function (){
+    console.log("updating masteries");
+  };
+  $scope.tabs.updateInfo.matches = function (){
+    console.log("updating matches");
+  };
+  $scope.tabs.updateInfo.champions = function (){
+    console.log("updating champions");
+  };
+  $scope.tabs.updateInfo.league = function (){
+    console.log("updating league");
+  };
+
+  console.log($scope.tabs);
 }])

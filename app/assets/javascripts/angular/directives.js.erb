@@ -11,3 +11,18 @@ app.directive('subNavBar', function(){
     templateUrl: "<%=  asset_path('partials/subNavBarPartial.html') %>",
   };
 });
+
+app.directive('profileTab', function(){
+  return {
+    restrict: 'E',
+    templateUrl: "<%=  asset_path('partials/profileTabPartial.html') %>"
+  };
+});
+
+app.directive('runesTab', function(){
+  return {
+    restrict: 'E',
+    templateUrl: "<%=  asset_path('partials/runesTabPartial.html') %>"
+  };
+});
+
