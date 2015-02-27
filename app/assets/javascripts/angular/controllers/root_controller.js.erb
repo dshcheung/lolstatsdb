@@ -11,18 +11,18 @@ app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$route
   } else {
     $scope.selectedRegion = $scope.regions[6];
   }
-  $scope.logoPath = "<%=  asset_path('logo.png') %>";
   $scope.summoner = {};
 
   $scope.searchSummoner = function (){
     var data = {
-      'summoner': $scope.summoner.name,
+      'summoner': $scope.summoner.searchName,
       'region': $scope.selectedRegion.code
     };
 
-    $http.post('/summoner', data).success(function(response){
+    $http.post('/summoner/name', data).success(function(response){
       console.log(response);
       if (response.summoner != null){
+        $scope.summoner
         $location.path('/summoner/' + $scope.selectedRegion.code + '/' + response.summoner.id);
       } else {
         //noty here
@@ -37,9 +37,9 @@ app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$route
 
   $scope.changeRegion = function (region){
     $scope.selectedRegion = region.region;
-    console.log($scope.summoner.name);
+    console.log($scope.summoner.searchName);
 
-    if ($scope.summoner.name != undefined){
+    if ($scope.summoner.searchName != undefined){
       $scope.searchSummoner();
     } else {
       $location.path('/summoner/' + $scope.selectedRegion.code);
