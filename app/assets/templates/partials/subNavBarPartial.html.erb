@@ -1,9 +1,9 @@
 <nav class="navbar navbar-default">
   <div class="container">
-    <a class="navbar-brand" href="/#/"><img src="{{logoPath}}" alt="logo"></a>
+    <a class="navbar-brand" href="/#/"><img src="<%=  asset_path('logo.png') %>" alt="logo"></a>
     <form class="form-inline navbar-right" ng-submit="searchSummoner()">
       <div class="form-group">
-        <input type="text" placeholder="Summoner Name" ng-model="summoner.name">
+        <input type="text" placeholder="Summoner Name" ng-model="summoner.searchName">
         <button type="button" data-toggle="dropdown">
           {{selectedRegion.code}}
         </button>

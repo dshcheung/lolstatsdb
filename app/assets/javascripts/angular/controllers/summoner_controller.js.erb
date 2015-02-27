@@ -1,8 +1,27 @@
-app.controller('SummonerCtrl', ['$scope', function($scope){
+app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scope, $routeParams, $http){
+  console.log($scope);
+
   // Summoner Information
+  // Set Initial Information
   $scope.summonerInfo = {};
-  $scope.summonerInfo.name = "Harunoame";
-  $scope.summonerInfo.level = 30;
+  $scope.searchSummonerById = function () {
+    var data = {
+      'id': $routeParams.summonerId,
+      'region': $scope.$parent.selectedRegion.code
+    }
+    $http.post('/summoner/id', data).success(function(response){
+      console.log(response);
+      // $scope.summonerInfo.profileIcon = "http://ddragon.leagueoflegends.com/cdn/5.2.1/img/profileicon/"+response.summoner.profileIconId+".png";
+      $scope.summonerInfo.profileIcon = "<%= asset_path('assets/profileIcons/profileIcon-"+response.summoner.profileIconId+".png') %>"
+      console.log("<%= asset_path('profileIcon-"+response.summoner.profileIconId+".png') %>")
+      $scope.summonerInfo.name = response.summoner.name;
+      $scope.summonerInfo.level = response.summoner.summonerLevel;
+      $scope.summonerInfo.id = response.summoner.id;
+    }).error(function(response){
+      // noty error messages
+    })
+  }
+  $scope.searchSummonerById();
 
   // Tabs stuff
   $scope.tabs = {};
@@ -39,6 +58,4 @@ app.controller('SummonerCtrl', ['$scope', function($scope){
   $scope.tabs.updateInfo.league = function (){
     console.log("updating league");
   };
-
-  console.log($scope.tabs);
 }])
