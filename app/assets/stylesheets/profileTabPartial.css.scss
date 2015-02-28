@@ -2,7 +2,6 @@
 profile-tab > div.row {
   div.league-summary, div.stats-summary, div.champion-summary, div.position-summary {
     box-sizing: border-box;
-    width: calc((100%/2) - 30px);
     background: white;
     border-radius: 10px;
     margin: 15px;
@@ -10,15 +9,8 @@ profile-tab > div.row {
     text-align: center;
     padding: 0;
   }
-  @media screen and (max-width: 767px){
-    div.league-summary, div.stats-summary, div.champion-summary, div.position-summary {
-      width: calc(100% - 30px);
-    }
-  }
   div.league-summary {
-    div.league-summary-title {
-      border-bottom: 1px solid rgb(221, 221, 221);
-    }
+    width: calc((100%/12*8) - 30px);
     div.row > div.col-xs-4 {
       width: 33%;
       div.league-info {
@@ -35,23 +27,41 @@ profile-tab > div.row {
     }
   }
   div.stats-summary {
+    overflow: auto;
+    width: calc((100%/12*4) - 30px);
     height: 500px;
-    max-height: 300px;
-    div.stats-summary-title {
-      border-bottom: 1px solid rgb(221, 221, 221);
-    }
+    max-height: 366px;
     div.row {
-      
+      margin: 0;
+      text-align: left;
     }
+  }
+  div.champion-summary {
+    width: calc((100%/2) - 30px);
+    div.row {
+    }
+  }
+  div.position-summary {
+    width: calc((100%/2) - 30px);
+    div.row {
+    }
+  }
+  div.summary-title {
+    border-bottom: 1px solid rgb(221,221,221);
   }
   @media screen and (max-width: 1199px){
     div.stats-summary {
-      max-height: 267px;
+      max-height: 322px;
     }
   }
   @media screen and (max-width: 991px){
     div.stats-summary {
-      max-height: 231px;
+      max-height: 274px;
+    }
+  }
+  @media screen and (max-width: 767px){
+    div.league-summary, div.stats-summary, div.champion-summary, div.position-summary {
+      width: calc(100% - 30px);
     }
   }
 }
