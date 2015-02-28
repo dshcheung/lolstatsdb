@@ -1,4 +1,57 @@
 @import "variables";
-profile-tab {
-  
+profile-tab > div.row {
+  div.league-summary, div.stats-summary, div.champion-summary, div.position-summary {
+    box-sizing: border-box;
+    width: calc((100%/2) - 30px);
+    background: white;
+    border-radius: 10px;
+    margin: 15px;
+    border: 1px solid black;
+    text-align: center;
+    padding: 0;
+  }
+  @media screen and (max-width: 767px){
+    div.league-summary, div.stats-summary, div.champion-summary, div.position-summary {
+      width: calc(100% - 30px);
+    }
+  }
+  div.league-summary {
+    div.league-summary-title {
+      border-bottom: 1px solid rgb(221, 221, 221);
+    }
+    div.row > div.col-xs-4 {
+      width: 33%;
+      div.league-info {
+        img {
+          width: 100%;
+        }
+        div {
+          height: 80px;
+        }
+      }
+    }
+    div.col-xs-4:not(:last-child) {
+      border-right: 1px solid rgb(221, 221, 221);
+    }
+  }
+  div.stats-summary {
+    height: 500px;
+    max-height: 300px;
+    div.stats-summary-title {
+      border-bottom: 1px solid rgb(221, 221, 221);
+    }
+    div.row {
+      
+    }
+  }
+  @media screen and (max-width: 1199px){
+    div.stats-summary {
+      max-height: 267px;
+    }
+  }
+  @media screen and (max-width: 991px){
+    div.stats-summary {
+      max-height: 231px;
+    }
+  }
 }

@@ -93,4 +93,27 @@ class SummonersController < ApplicationController
       end
     end
   end
+
+  def stats_summary
+    require 'open-uri'
+    require 'json'
+
+    @tries = 0
+    begin
+      url = "https://#{params['region']}.api.pvp.net/api/lol/#{params['region']}/v1.3/stats/by-summoner/#{params['id']}/summary?season=SEASON2015&api_key=#{ENV['API_KEY']}"
+      response = JSON.parse(open(url).read)
+      if response.empty?
+        render json: {success: true, stats: nil}, status: 200
+      else
+        render json: {success: true, stats: response["playerStatSummaries"]}, status: 200
+      end
+    rescue OpenURI::HTTPError => e
+      case rescue_me(e)
+      when 1
+        retry
+      when 2
+        render json: {success: false}, status: 400
+      end
+    end
+  end
 end
