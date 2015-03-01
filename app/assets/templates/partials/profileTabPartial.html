@@ -1,1 +1,103 @@
-<h1>testing profile</h1>
+<div class="row">
+  <div class="col-xs-12 col-sm-8 league-summary">
+    <div class="summary-title" >
+      <label>Rank Summary</label>
+    </div>
+    <div class="row">
+      <div class="col-xs-4" ng-repeat="type in queType">
+        <label>{{type}}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4" ng-repeat="type in summonerInfo.league">
+        <div ng-show="type != null" class="league-info">
+          <img src="{{type.badge_icon}}" alt="">
+          <div>
+            <p>{{type.tier}} {{type.entries[0].division}}</p>
+            <p>LP: {{type.entries[0].leaguePoints}}</p>
+            <p>Wins: {{type.entries[0].wins}}</p>
+          </div>
+        </div>
+        <div ng-show="type == null" class="league-info">
+          <img src="{{badgeDefault}}" alt="">
+          <div>
+            <p>UNRANKED</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-4 stats-summary">
+    <div class="summary-title">
+      <label>General Stats</label>
+    </div>
+    <div class="row">
+      <table class="table table-bordered table-striped">
+        <caption>Ranked 5x5</caption>
+        <tbody>
+          <tr>
+            <td>kills</th>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>kills</th>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>kills</th>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>kills</th>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>kills</th>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>kills</th>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>kills</th>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>kills</th>
+            <td>50</td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered table-striped">
+        <caption>Ranked 5x5</caption>
+        <tbody>
+          <tr>
+            <td>kills</th>
+            <td>50</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12 col-sm-6 champion-summary">
+    <div class="summary-title">
+      <label>Chamption Win Rates</label>
+    </div>
+    <div class="row">
+      
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-6 position-summary">
+    <div class="summary-title">
+      <label>Position Frequency</label>
+    </div>
+    <div class="row">
+      
+    </div>
+  </div>
+</div>
+

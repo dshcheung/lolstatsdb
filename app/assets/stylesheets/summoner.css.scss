@@ -1,5 +1,9 @@
 @import "variables";
 
+.body {
+  background: rgb(247,247,247);
+}
+
 div.summoner-page {
   header.container {
     margin: auto;
@@ -70,8 +74,25 @@ div.summoner-page {
       ul{
         li {
           a {
+            background: white;
+            border-radius: 0;
+            border-bottom: 1px solid rgb(221, 221, 221);
+            border-top: 1px solid rgb(221, 221, 221);
+            border-right: 1px solid rgb(221, 221, 221);
+            color: black;
             margin: 0;
           }
+        }
+        li:first-child > a {
+          border-left: 1px solid rgb(221, 221, 221);
+          border-bottom-left-radius: 10px;
+        }
+        li:last-child > a {
+          border-bottom-right-radius: 10px;
+        }
+        li.active > a {
+          border-bottom: 1px solid rgb(221, 221, 221);
+          color: rgb(22, 160, 133);
         }
       }
     }

@@ -7,7 +7,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
   $scope.summonerInfo.searchData = {
     'id': $routeParams.summonerId,
     'region': $scope.$parent.selectedRegion.code
-  }
+  };
   $scope.searchSummonerById = function () {
     $http.post('/summoner/id', $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
@@ -18,7 +18,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     }).error(function(response){
       // noty error messages
     })
-  }
+  };
   $scope.summonerInfo.league = {};
   $scope.searchLeagueEntry = function (){
     $http.post('/summoner/league_entry', $scope.summonerInfo.searchData).success(function(response){
@@ -30,9 +30,22 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     }).error(function(response){
       // noty error messages
     })
-  }
+  };
+  $scope.queType = ["Solo 5x5", "Team 3x3", "Team 5x5"];
+  $scope.badgeDefault = "<%= asset_path('badgeDefault.png') %>";
+  $scope.summonerInfo.stats = {}
+  $scope.searchStatsSummary = function (){
+    $http.post('/summoner/stats_summary', $scope.summonerInfo.searchData).success(function(response){
+      console.log(response);
+    }).error(function(response){
+      // noty error messages
+    })
+  };
+
+  //get informations
   $scope.searchSummonerById();
   $scope.searchLeagueEntry();
+  $scope.searchStatsSummary();
 
   // Tabs stuff
   $scope.tabs = {};
