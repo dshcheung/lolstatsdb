@@ -123,7 +123,21 @@ class SummonersController < ApplicationController
     end
   end
 
-  def stats_summary
+  def get_stats_summary
+    summoner = Summoner.find_by(summonerId: params['id'].to_i, region: params['region'].to_s)
+    if summoner[:stats_summary].nil?
+      update_stats_summary(params['id'], params['region'], summoner)
+    end
+    render json: {stats_summary: summoner[:stats_summary]}
+  end
+
+  def renew_stats_summary
+    summoner = Summoner.find_by(summonerId: params['id'], region: params['region'])
+    update_stats_summary(params['id'], params['region'], summoner)
+    render json: {stats_summary: summoner[:stats_summary]}
+  end
+
+  def update_stats_summary(id, region, summoner)
     require 'open-uri'
     require 'json'
 
@@ -147,20 +161,17 @@ class SummonersController < ApplicationController
       normal_team3: {
         stats: nil,
         title: "Normal 3x3"
-      },
+      }
     }
 
     @tries = 0
     begin
-      url = "https://#{params['region']}.api.pvp.net/api/lol/#{params['region']}/v1.3/stats/by-summoner/#{params['id']}/summary?season=SEASON2015&api_key=#{ENV['API_KEY']}"
+      url = "https://#{region}.api.pvp.net/api/lol/#{region}/v1.3/stats/by-summoner/#{id}/summary?season=SEASON2015&api_key=#{ENV['API_KEY']}"
       response = JSON.parse(open(url).read)
-      if response.empty?
-        render json: {success: true, stats: stats}, status: 200
-      else
+      if not response.empty?
         game = response["playerStatSummaries"]
         for i in 0..game.length - 1
-          game_type = response["playerStatSummaries"][i]["playerStatSummaryType"]
-          puts "#{i}"
+          game_type = game[i]["playerStatSummaryType"]
           if game_type == "RankedTeam5x5"
             stats[:rank_team5][:stats] = game[i]
           elsif game_type == "RankedSolo5x5"
@@ -173,43 +184,76 @@ class SummonersController < ApplicationController
             stats[:normal_team3][:stats] = game[i]
           end
         end
-        # summoner = Summoner.find_by(summonerId: params['id'])
-        # if not summoner.nil?
-        #   summoner.update(stats_summary: stats)
-        # end
-        render json: {success: true, stats: stats}, status: 200
+        summoner.update(stats_summary: stats)
       end
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
       when 1
         retry
       when 2
-        render json: {success: false}, status: 400
+        return e
       end
     end
   end
 
-  def stats_ranked
+  def get_stats_ranked
+    summoner = Summoner.find_by(summonerId: params['id'].to_i, region: params['region'].to_s)
+    if summoner[:stats_ranked].nil?
+      update_stats_ranked(params['id'], params['region'], summoner)
+    end
+    # stats_ranked = summoner.stats_rankeds
+    # render json: {stats_ranked: summoner[:stats_ranked]}
+    render json: {success: true}
+  end
+
+  def renew_stats_ranked
+    summoner = Summoner.find_by(summonerId: params['id'], region: params['region'])
+    update_stats_ranked(params['id'], params['region'], summoner)
+    render json: {stats_ranked: summoner[:stats_ranked]}
+  end
+
+  def update_stats_ranked(id, region, summoner)
     require 'open-uri'
     require 'json'
 
     @tries = 0
     begin
-      url = "https://#{params['region']}.api.pvp.net/api/lol/#{params['region']}/v1.3/stats/by-summoner/#{params['id']}/ranked?season=SEASON2015&api_key=#{ENV['API_KEY']}"
+      url = "https://#{region}.api.pvp.net/api/lol/#{region}/v1.3/stats/by-summoner/#{id}/ranked?season=SEASON2015&api_key=#{ENV['API_KEY']}"
       response = JSON.parse(open(url).read)
-      if response.empty?
-        render json: {success: true, stats_ranked: nil}, status: 200
-      else
-        @stats = response['champions'][-1]['stats']
-        render 'stats_ranked.json.jbuilder', status: 200
-        # render json: {success: true, stats_ranked: response['champions'][-1]['stats']}, status: 200
+      if not response.empty?
+        summoner.stats_rankeds.destroy_all
+        puts "testing here -------------"
+        puts response['champions'][0]['stats']['totalChampionKills']
+        puts response['champions'][0]['stats']['totalSessionsPlayed']
+
+        response['champions'].each do |champion|
+          summoner.stats_rankeds.create(championId: champion['id'],
+                                       penta_kills: champion['stats']['totalPentaKills'],
+                                       quadra_kills: champion['stats']['totalQuadraKills'],
+                                       triple_kills: champion['stats']['totalTripleKills'],
+                                       double_kills: champion['stats']['totalDoubleKills'],
+                                       total_kills: champion['stats']['totalChampionKills'],
+                                       average_kills: champion['stats']['totalChampionKills']/(champion['stats']['totalSessionsPlayed'] + 0.0),
+                                       total_assists: champion['stats']['totalAssists'],
+                                       average_assists: champion['stats']['totalAssists']/(champion['stats']['totalSessionsPlayed'] + 0.0),
+                                       total_deaths: champion['stats']['totalDeathsPerSession'],
+                                       average_assists: champion['stats']['totalDeathsPerSession']/(champion['stats']['totalSessionsPlayed'] + 0.0),
+                                       total_minions: champion['stats']['totalMinionKills'],
+                                       average_minions: champion['stats']['totalMinionKills']/(champion['stats']['totalSessionsPlayed'] + 0.0),
+                                       total_gold: champion['stats']['totalGoldEarned'],
+                                       average_gold: champion['stats']['totalGoldEarned']/(champion['stats']['totalSessionsPlayed'] + 0.0),
+                                       total_games: champion['stats']['totalSessionsPlayed'],
+                                       total_wins: champion['stats']['totalSessionsWon'],
+                                       total_losses: champion['stats']['totalSessionsLost'],
+                                       win_rate: champion['stats']['totalSessionsWon']/(champion['stats']['totalSessionsPlayed'] + 0.0))
+        end
       end
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
       when 1
         retry
       when 2
-        render json: {success: false}, status: 400
+        return e
       end
     end
   end

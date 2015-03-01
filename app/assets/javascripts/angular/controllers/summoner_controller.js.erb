@@ -20,7 +20,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
   $scope.summonerInfo.league = {};
   $scope.queType = ["Solo 5x5", "Team 3x3", "Team 5x5"];
   $scope.badgeDefault = "<%= asset_path('badgeDefault.png') %>";
-  $scope.searchLeagueEntry = function (){
+  $scope.getLeagueEntry = function (){
     $http.post('/summoner/get_league_entry', $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
       $scope.summonerInfo.league = response.league_entry;
@@ -30,28 +30,28 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     })
   };
   $scope.summonerInfo.stats_summary = {}
-  $scope.searchStatsSummary = function (){
-    $http.post('/summoner/stats_summary', $scope.summonerInfo.searchData).success(function(response){
+  $scope.getStatsSummary = function (){
+    $http.post('/summoner/get_stats_summary', $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
-      $scope.summonerInfo.stats_summary = response.stats;
+      $scope.summonerInfo.stats_summary = response.stats_summary;
     }).error(function(response){
       // noty error messages
     })
   };
-  // $scope.summonerInfo.stats_ranked = {}
-  // $scope.searchStatsRanked = function (){
-  //   $http.post('/summoner/stats_ranked', $scope.summonerInfo.searchData).success(function(response){
-  //     console.log(response);
-  //   }).error(function(response){
-  //     // noty error messages
-  //   })
-  // }
+  $scope.summonerInfo.stats_ranked = {}
+  $scope.getStatsRanked = function (){
+    $http.post('/summoner/get_stats_ranked', $scope.summonerInfo.searchData).success(function(response){
+      console.log(response);
+    }).error(function(response){
+      // noty error messages
+    })
+  }
 
   //get informations
   $scope.searchSummonerById();
-  $scope.searchLeagueEntry();
-  $scope.searchStatsSummary();
-  // $scope.searchStatsRanked();
+  $scope.getLeagueEntry();
+  $scope.getStatsSummary();
+  $scope.getStatsRanked();
 
   // Tabs stuff
   $scope.tabs = {};
