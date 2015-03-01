@@ -71,28 +71,30 @@ div.summoner-page {
     margin: auto;
     padding: 0;
     section.summoner-tabs {
-      ul{
-        li {
-          a {
-            background: white;
-            border-radius: 0;
-            border-bottom: 1px solid rgb(221, 221, 221);
-            border-top: 1px solid rgb(221, 221, 221);
-            border-right: 1px solid rgb(221, 221, 221);
-            color: black;
-            margin: 0;
+      div.secondary-nav {
+        ul.nav.nav-tabs.nav-justified{
+          li {
+            a {
+              background: white;
+              border-radius: 0;
+              border-bottom: 1px solid rgb(221, 221, 221);
+              border-top: 1px solid rgb(221, 221, 221);
+              border-right: 1px solid rgb(221, 221, 221);
+              color: black;
+              margin: 0;
+            }
           }
-        }
-        li:first-child > a {
-          border-left: 1px solid rgb(221, 221, 221);
-          border-bottom-left-radius: 10px;
-        }
-        li:last-child > a {
-          border-bottom-right-radius: 10px;
-        }
-        li.active > a {
-          border-bottom: 1px solid rgb(221, 221, 221);
-          color: rgb(22, 160, 133);
+          li:first-child > a {
+            border-left: 1px solid rgb(221, 221, 221);
+            border-bottom-left-radius: 10px;
+          }
+          li:last-child > a {
+            border-bottom-right-radius: 10px;
+          }
+          li.active > a {
+            border-bottom: 1px solid rgb(221, 221, 221);
+            color: rgb(22, 160, 133);
+          }
         }
       }
     }

@@ -69,10 +69,22 @@
 <div class="row">
   <div class="col-xs-12 col-sm-6 champion-summary">
     <div class="summary-title">
-      <label>Chamption Win Rates</label>
-    </div>
-    <div class="row">
-      
+      <label>Top 5 Played Champions</label>
+    </div>    
+    <div class="row" ng-repeat="champ in summonerInfo.stats_ranked_top5 track by $index">
+      <div class="champ-info pull-left">
+        <div class="info-image"><img src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{champ.champion_name_key}}.png "></div>
+        <div class="info-name">{{champ.champion_name}}</div>
+      </div>
+      <div class="champ-stats">
+        <div class="stat-kda"><span><img src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/ui/score.png"></span>{{champ.average_kills}} / {{champ.average_deaths}} / {{champ.average_assists}} KDA</div>
+        <div class="stat-cs"><span><img src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/ui/minion.png"></span>{{champ.average_minions}} CS</div>
+        <div class="stat-cs"><span><img src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/ui/gold.png"></span>{{champ.average_gold}} Gold</div>
+      </div>
+      <div class="champ-game pull-right">
+        <div class="game-played">{{champ.total_games}} Played</div>
+        <div class="game-rate"><h4>{{(champ.win_rate * 100) | number:2}}%</h4></div>
+      </div>
     </div>
   </div>
   <div class="col-xs-12 col-sm-6 position-summary">
@@ -84,4 +96,3 @@
     </div>
   </div>
 </div>
-
