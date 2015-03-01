@@ -32,52 +32,36 @@
       <label>General Stats</label>
     </div>
     <div class="row">
-      <table class="table table-bordered table-striped">
-        <caption>Ranked 5x5</caption>
+      <table class="table table-bordered table-striped" ng-repeat="type in summonerInfo.stats_summary" ng-show="type.stats.aggregatedStats.totalMinionKills != null">
+        <caption>{{type.title}}</caption>
         <tbody>
           <tr>
-            <td>kills</th>
-            <td>50</td>
+            <td class="col-xs-6">Wins</td>
+            <td class="col-xs-6">{{type.stats.wins}}</td>
           </tr>
           <tr>
-            <td>kills</th>
-            <td>50</td>
+            <td class="col-xs-6">Kills</td>
+            <td class="col-xs-6">{{type.stats.aggregatedStats.totalChampionKills}}</td>
           </tr>
           <tr>
-            <td>kills</th>
-            <td>50</td>
+            <td class="col-xs-6">Assists</td>
+            <td class="col-xs-6">{{type.stats.aggregatedStats.totalAssists}}</td>
           </tr>
           <tr>
-            <td>kills</th>
-            <td>50</td>
+            <td class="col-xs-6">Minion Kills</td>
+            <td class="col-xs-6">{{type.stats.aggregatedStats.totalMinionKills}}</td>
           </tr>
           <tr>
-            <td>kills</th>
-            <td>50</td>
+            <td class="col-xs-6">Neutral Minion Kill</td>
+            <td class="col-xs-6">{{type.stats.aggregatedStats.totalNeutralMinionsKilled}}</td>
           </tr>
           <tr>
-            <td>kills</th>
-            <td>50</td>
-          </tr>
-          <tr>
-            <td>kills</th>
-            <td>50</td>
-          </tr>
-          <tr>
-            <td>kills</th>
-            <td>50</td>
+            <td class="col-xs-6">Turrent Destroyed</td>
+            <td class="col-xs-6">{{type.stats.aggregatedStats.totalTurretsKilled}}</td>
           </tr>
         </tbody>
       </table>
-      <table class="table table-bordered table-striped">
-        <caption>Ranked 5x5</caption>
-        <tbody>
-          <tr>
-            <td>kills</th>
-            <td>50</td>
-          </tr>
-        </tbody>
-      </table>
+    </div>
     </div>
   </div>
 </div>

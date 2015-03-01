@@ -1,6 +1,4 @@
 app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scope, $routeParams, $http){
-  console.log($scope);
-
   // Summoner Information
   // Set Initial Information
   $scope.summonerInfo = {};
@@ -11,41 +9,49 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
   $scope.searchSummonerById = function () {
     $http.post('/summoner/id', $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
-      $scope.summonerInfo.profileIcon = response.summoner.icon;
+      $scope.summonerInfo.profileIconId = response.summoner.profileIconId;
       $scope.summonerInfo.name = response.summoner.name;
-      $scope.summonerInfo.level = response.summoner.summonerLevel;
-      $scope.summonerInfo.id = response.summoner.id;
+      $scope.summonerInfo.level = response.summoner.level;
+      $scope.summonerInfo.summonerId = response.summoner.summonerId;
     }).error(function(response){
       // noty error messages
     })
   };
   $scope.summonerInfo.league = {};
-  $scope.searchLeagueEntry = function (){
-    $http.post('/summoner/league_entry', $scope.summonerInfo.searchData).success(function(response){
+  $scope.queType = ["Solo 5x5", "Team 3x3", "Team 5x5"];
+  $scope.badgeDefault = "<%= asset_path('badgeDefault.png') %>";
+  $scope.getLeagueEntry = function (){
+    $http.post('/summoner/get_league_entry', $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
-      $scope.summonerInfo.league.team5 = response.league_entry.team5;
-      $scope.summonerInfo.league.team3 = response.league_entry.team3;
-      $scope.summonerInfo.league.solo5 = response.league_entry.solo5;
+      $scope.summonerInfo.league = response.league_entry;
       $scope.summonerInfo.borderIcon = response.border_icon;
     }).error(function(response){
       // noty error messages
     })
   };
-  $scope.queType = ["Solo 5x5", "Team 3x3", "Team 5x5"];
-  $scope.badgeDefault = "<%= asset_path('badgeDefault.png') %>";
-  $scope.summonerInfo.stats = {}
-  $scope.searchStatsSummary = function (){
-    $http.post('/summoner/stats_summary', $scope.summonerInfo.searchData).success(function(response){
+  $scope.summonerInfo.stats_summary = {}
+  $scope.getStatsSummary = function (){
+    $http.post('/summoner/get_stats_summary', $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
+      $scope.summonerInfo.stats_summary = response.stats_summary;
     }).error(function(response){
       // noty error messages
     })
   };
+  $scope.summonerInfo.stats_ranked = {}
+  $scope.getStatsRanked = function (){
+    $http.post('/summoner/get_stats_ranked', $scope.summonerInfo.searchData).success(function(response){
+      console.log(response);
+    }).error(function(response){
+      // noty error messages
+    })
+  }
 
   //get informations
   $scope.searchSummonerById();
-  $scope.searchLeagueEntry();
-  $scope.searchStatsSummary();
+  $scope.getLeagueEntry();
+  $scope.getStatsSummary();
+  $scope.getStatsRanked();
 
   // Tabs stuff
   $scope.tabs = {};
@@ -83,3 +89,5 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     console.log("updating league");
   };
 }])
+
+// "HiMyNameIsBob".split(/(?=[A-Z])/)

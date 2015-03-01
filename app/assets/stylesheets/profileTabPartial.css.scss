@@ -34,6 +34,9 @@ profile-tab > div.row {
     div.row {
       margin: 0;
       text-align: left;
+      table > tbody > tr > td:last-child {
+        text-align: center;
+      }
     }
   }
   div.champion-summary {
