@@ -42,6 +42,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
   $scope.getStatsRanked = function (){
     $http.post('/summoner/get_stats_ranked', $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
+      $scope.summonerInfo.stats_ranked_top5 = response.top5;
     }).error(function(response){
       // noty error messages
     })
@@ -52,6 +53,9 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
   $scope.getLeagueEntry();
   $scope.getStatsSummary();
   $scope.getStatsRanked();
+
+  //tooltip stuff
+  $scope.tipCount = 0;
 
   // Tabs stuff
   $scope.tabs = {};

@@ -2,6 +2,8 @@ class CreateStatsRankeds < ActiveRecord::Migration
   def change
     create_table :stats_rankeds do |t|
       t.integer :championId
+      t.string :champion_name
+      t.string :champion_name_key
       t.integer :penta_kills
       t.integer :quadra_kills
       t.integer :triple_kills
@@ -11,11 +13,11 @@ class CreateStatsRankeds < ActiveRecord::Migration
       t.integer :total_assists
       t.float :average_assists
       t.integer :total_deaths
-      t.float :average_assists
+      t.float :average_deaths
       t.integer :total_minions
-      t.float :average_minions
+      t.integer :average_minions
       t.integer :total_gold
-      t.float :average_gold
+      t.integer :average_gold
       t.integer :total_games
       t.integer :total_wins
       t.integer :total_losses

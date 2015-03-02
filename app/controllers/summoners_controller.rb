@@ -197,13 +197,18 @@ class SummonersController < ApplicationController
   end
 
   def get_stats_ranked
+    puts "start summoner"
     summoner = Summoner.find_by(summonerId: params['id'].to_i, region: params['region'].to_s)
-    if summoner[:stats_ranked].nil?
+    puts "after summoner"
+    if summoner.stats_rankeds.empty?
+      puts "start update_stats_ranked"
       update_stats_ranked(params['id'], params['region'], summoner)
+      puts "after update_stats"
     end
-    # stats_ranked = summoner.stats_rankeds
-    # render json: {stats_ranked: summoner[:stats_ranked]}
-    render json: {success: true}
+    puts "start top 5"
+    stats_ranked = summoner.stats_rankeds.order(total_games: :desc).limit(5)
+    puts "after top 5"
+    render json: {top5: stats_ranked}
   end
 
   def renew_stats_ranked
@@ -227,25 +232,33 @@ class SummonersController < ApplicationController
         puts response['champions'][0]['stats']['totalSessionsPlayed']
 
         response['champions'].each do |champion|
+          if champion['id'] == 0
+            next
+          end
+          champ = Champion.find_by(championId: champion['id'], region: region)
+          champ_name = champ.name
+          champ_key = champ.name_key
           summoner.stats_rankeds.create(championId: champion['id'],
+                                       champion_name: champ_name,
+                                       champion_name_key: champ_key,
                                        penta_kills: champion['stats']['totalPentaKills'],
                                        quadra_kills: champion['stats']['totalQuadraKills'],
                                        triple_kills: champion['stats']['totalTripleKills'],
                                        double_kills: champion['stats']['totalDoubleKills'],
                                        total_kills: champion['stats']['totalChampionKills'],
-                                       average_kills: champion['stats']['totalChampionKills']/(champion['stats']['totalSessionsPlayed'] + 0.0),
+                                       average_kills: (champion['stats']['totalChampionKills']/(champion['stats']['totalSessionsPlayed'] + 0.0)).round(1),
                                        total_assists: champion['stats']['totalAssists'],
-                                       average_assists: champion['stats']['totalAssists']/(champion['stats']['totalSessionsPlayed'] + 0.0),
+                                       average_assists: (champion['stats']['totalAssists']/(champion['stats']['totalSessionsPlayed'] + 0.0)).round(1),
                                        total_deaths: champion['stats']['totalDeathsPerSession'],
-                                       average_assists: champion['stats']['totalDeathsPerSession']/(champion['stats']['totalSessionsPlayed'] + 0.0),
+                                       average_deaths: (champion['stats']['totalDeathsPerSession']/(champion['stats']['totalSessionsPlayed'] + 0.0)).round(1),
                                        total_minions: champion['stats']['totalMinionKills'],
-                                       average_minions: champion['stats']['totalMinionKills']/(champion['stats']['totalSessionsPlayed'] + 0.0),
+                                       average_minions: (champion['stats']['totalMinionKills']/(champion['stats']['totalSessionsPlayed'] + 0.0)).round,
                                        total_gold: champion['stats']['totalGoldEarned'],
-                                       average_gold: champion['stats']['totalGoldEarned']/(champion['stats']['totalSessionsPlayed'] + 0.0),
+                                       average_gold: (champion['stats']['totalGoldEarned']/(champion['stats']['totalSessionsPlayed'] + 0.0)).round,
                                        total_games: champion['stats']['totalSessionsPlayed'],
                                        total_wins: champion['stats']['totalSessionsWon'],
                                        total_losses: champion['stats']['totalSessionsLost'],
-                                       win_rate: champion['stats']['totalSessionsWon']/(champion['stats']['totalSessionsPlayed'] + 0.0))
+                                       win_rate: (champion['stats']['totalSessionsWon']/(champion['stats']['totalSessionsPlayed'] + 0.0)).round(4))
         end
       end
     rescue OpenURI::HTTPError => e
