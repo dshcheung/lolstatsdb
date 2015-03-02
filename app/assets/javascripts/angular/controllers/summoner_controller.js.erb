@@ -43,25 +43,24 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     $http.post('/summoner/get_stats_ranked', $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
       $scope.summonerInfo.stats_ranked_top5 = response.top5;
+      $scope.summonerInfo.stats_ranked_all = response.all_ranked;
     }).error(function(response){
       // noty error messages
     })
   }
 
-  //get informations
-  $scope.searchSummonerById();
-  $scope.getLeagueEntry();
-  $scope.getStatsSummary();
-  $scope.getStatsRanked();
-
   //tooltip stuff
   $scope.tipCount = 0;
+
+  //table sorting stuff
+  $scope.predicate = "";
+  $scope.reverse = false;
 
   // Tabs stuff
   $scope.tabs = {};
   $scope.tabs.changed = function(tabHeading){
     $scope.tabs.status[tabHeading] = true;
-    $scope.tabs.updateInfo[tabHeading]();
+    $scope.tabs.getInfo[tabHeading]();
   };
   $scope.tabs.deselected = function(tabHeading){
     $scope.tabs.status[tabHeading] = false;
@@ -73,24 +72,28 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
   $scope.tabs.status.matches = false;
   $scope.tabs.status.champions = false;
   $scope.tabs.status.league = false;  
-  $scope.tabs.updateInfo = {};
-  $scope.tabs.updateInfo.profile = function (){
-    console.log("updating profile");
+  $scope.tabs.getInfo = {};
+  $scope.tabs.getInfo.profile = function (){
+    console.log("getting profile");
+    $scope.searchSummonerById();
+    $scope.getLeagueEntry();
+    $scope.getStatsSummary();
+    $scope.getStatsRanked();
   };
-  $scope.tabs.updateInfo.runes = function (){
-    console.log("updating runes");
+  $scope.tabs.getInfo.runes = function (){
+    console.log("getting runes");
   };
-  $scope.tabs.updateInfo.masteries = function (){
-    console.log("updating masteries");
+  $scope.tabs.getInfo.masteries = function (){
+    console.log("getting masteries");
   };
-  $scope.tabs.updateInfo.matches = function (){
-    console.log("updating matches");
+  $scope.tabs.getInfo.matches = function (){
+    console.log("getting matches");
   };
-  $scope.tabs.updateInfo.champions = function (){
-    console.log("updating champions");
+  $scope.tabs.getInfo.champions = function (){
+    console.log("getting champions");
   };
-  $scope.tabs.updateInfo.league = function (){
-    console.log("updating league");
+  $scope.tabs.getInfo.league = function (){
+    console.log("getting league");
   };
 }])
 

@@ -7,6 +7,7 @@ class CreateSummoners < ActiveRecord::Migration
       t.integer :profileIconId
       t.integer :level
       t.text :league
+      t.string :border_icon
       t.text :stats_summary
       t.timestamps
     end

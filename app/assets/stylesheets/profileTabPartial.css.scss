@@ -27,7 +27,7 @@ profile-tab > div.row {
       }
     }
     div.col-xs-4:not(:last-child) {
-      border-right: 1px solid rgb(221, 221, 221);
+      border-right: 1px solid $border-color-1;
     }
     div.row:last-child {
       div.col-xs-4 {
@@ -54,7 +54,7 @@ profile-tab > div.row {
     div.row {
       width: calc(100% - 10px);
       margin: 5px;
-      background: rgb(35,49,64);
+      background: $background-theme-3;
       color: white;
       border-radius: 10px;
       div.champ-info, div.champ-stats, div.champ-game {
@@ -78,7 +78,7 @@ profile-tab > div.row {
       div.champ-game {
         margin: 15px 0;
         h4 {
-          color: rgb(46, 204, 113);
+          color: $font-color-1;
         }
       }
     }
@@ -89,7 +89,7 @@ profile-tab > div.row {
     }
   }
   div.summary-title {
-    border-bottom: 1px solid rgb(221,221,221);
+    border-bottom: 1px solid $border-color-1;
   }
   @media screen and (max-width: 1199px){
     div.stats-summary {
