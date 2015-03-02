@@ -32,3 +32,10 @@ app.directive('championsTab', function(){
     templateUrl: "<%=  asset_path('partials/championsTabPartial.html') %>"
   };
 });
+
+app.directive('leagueTab', function(){
+  return {
+    restrict: 'E',
+    templateUrl: "<%=  asset_path('partials/leagueTabPartial.html') %>"
+  };
+});

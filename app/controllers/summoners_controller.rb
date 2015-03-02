@@ -63,6 +63,71 @@ class SummonersController < ApplicationController
     end
   end
 
+  def get_league_all
+    summoner_existance = League.find_by(region: params['region'], queue: params['queue'], name: params['leagueName'], tier: params['tier'], division: params['division'], summonerId: params['id'])
+    if summoner_existance.nil?
+      update_league_all(params['region'], params['id'])
+    end
+    league_promo = League.where(region: params['region'], queue: params['queue'], name: params['leagueName'], tier: params['tier'], division: params['division'], league_points: 100)
+    league_normal = League.where(region: params['region'], queue: params['queue'], name: params['leagueName'], tier: params['tier'], division: params['division'], league_points: 0..99)
+    render json: {league_promo: league_promo, league_normal: league_normal}
+  end
+
+  def renew_league_all
+    update_league_all(params['region'], params['id'])
+    league_promo = League.where(region: params['region'], queue: params['queue'], name: params['leagueName'], tier: params['tier'], division: params['division'], league_points: 100)
+    league_normal = League.where(region: params['region'], queue: params['queue'], name: params['leagueName'], tier: params['tier'], division: params['division'], league_points: 0..99)
+    render json: {league_promo: league_promo, league_normal: league_normal}
+  end
+
+  def destroy_old_leagues(id, queue)
+    entries = League.where(summonerId: id, queue: queue)
+    if not entries.empty?
+      entries.each do |entry|
+        League.where(region: entry.region, queue: entry.queue, name: entry.name, tier: entry.tier).destroy_all
+      end
+    end
+  end
+
+  def update_league_all(region, id)
+    require 'open-uri'
+    require 'json'
+
+    @tries = 0
+    begin
+      url = "https://#{region}.api.pvp.net/api/lol/#{region.downcase}/v2.5/league/by-summoner/#{id}?api_key=#{ENV['API_KEY']}"
+      response = JSON.parse(open(url).read)
+      
+      if not response.empty?
+        response = response["#{id}"]
+        response.each do |league|
+          league_name = league["name"]
+          league_queue = league["queue"]
+          league_tier = league["tier"]
+          destroy_old_leagues(id, league_queue)
+          League.where(region: region, queue: league_queue, name: league_name, tier: league_tier).destroy_all
+          league["entries"].each do |entry|
+            League.create(region: region,
+                          queue: league_queue,
+                          name: league_name,
+                          tier: league_tier,
+                          division: entry["division"],
+                          summonerId: entry["playerOrTeamId"],
+                          league_points: entry["leaguePoints"],
+                          entry: entry)
+          end
+        end
+      end
+    rescue OpenURI::HTTPError => e
+      case rescue_me(e)
+      when 1
+        retry
+      when 2
+        return e
+      end
+    end
+  end
+
   def get_league_entry
     summoner = Summoner.find_by(summonerId: params['id'].to_i, region: params['region'].to_s)
     if summoner[:league].nil?
