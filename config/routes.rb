@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   post '/summoner/get_league_entry', to: 'summoners#get_league_entry'
   post '/summoner/renew_league_entry', to: 'summoners#renew_league_entry'
 
+  post '/summoner/get_league_all', to: 'summoners#get_league_all'
+  post '/summoner/renew_league_all', to: 'summoners#renew_league_all'
+
   post '/summoner/get_stats_summary', to: 'summoners#get_stats_summary'
   post '/summoner/renew_stats_summary', to: 'summoners#renew_stats_summary'
   

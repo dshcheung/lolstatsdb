@@ -23,8 +23,25 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
   $scope.getLeagueEntry = function (){
     $http.post('/summoner/get_league_entry', $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
-      $scope.summonerInfo.league = response.league_entry;
+      $scope.summonerInfo.league.entry = response.league_entry;
       $scope.summonerInfo.borderIcon = response.border_icon;
+      $scope.getLeagueAll();
+    }).error(function(response){
+      // noty error messages
+    })
+  };
+  $scope.getLeagueAll = function (){
+    var leagueEntry = $scope.summonerInfo.league.entry
+    var data = $scope.summonerInfo.searchData;
+
+    data.queue = leagueEntry.solo5.queue;
+    data.leagueName = leagueEntry.solo5.name;
+    data.tier = leagueEntry.solo5.tier;
+    data.division = leagueEntry.solo5.entries[0].division;
+
+    $http.post('/summoner/get_league_all', data).success(function(response) {
+        console.log(response);
+        $scope.summonerInfo.league.all = response;
     }).error(function(response){
       // noty error messages
     })
