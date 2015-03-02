@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 20150301072201) do
     t.integer  "profileIconId"
     t.integer  "level"
     t.text     "league"
+    t.string   "border_icon"
     t.text     "stats_summary"
     t.datetime "created_at"
     t.datetime "updated_at"

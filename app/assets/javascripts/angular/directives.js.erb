@@ -26,3 +26,9 @@ app.directive('runesTab', function(){
   };
 });
 
+app.directive('championsTab', function(){
+  return {
+    restrict: 'E',
+    templateUrl: "<%=  asset_path('partials/championsTabPartial.html') %>"
+  };
+});

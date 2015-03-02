@@ -68,13 +68,13 @@ class SummonersController < ApplicationController
     if summoner[:league].nil?
       update_league_entry(params['id'], params['region'], summoner)
     end
-    render json: {league_entry: summoner[:league]}
+    render json: {league_entry: summoner[:league], border_icon: summoner[:border_icon]}
   end
 
   def renew_league_entry
     summoner = Summoner.find_by(summonerId: params['id'], region: params['region'])
     update_league_entry(params['id'], params['region'], summoner)
-    render json: {league_entry: summoner[:league]}
+    render json: {league_entry: summoner[:league], border_icon: summoner[:border_icon]}
   end
 
   def update_league_entry(id, region, summoner)
@@ -111,7 +111,7 @@ class SummonersController < ApplicationController
             end
           end 
         end
-        summoner.update(league: league)
+        summoner.update(league: league, border_icon: border_icon)
       end
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
@@ -197,18 +197,13 @@ class SummonersController < ApplicationController
   end
 
   def get_stats_ranked
-    puts "start summoner"
     summoner = Summoner.find_by(summonerId: params['id'].to_i, region: params['region'].to_s)
-    puts "after summoner"
     if summoner.stats_rankeds.empty?
-      puts "start update_stats_ranked"
       update_stats_ranked(params['id'], params['region'], summoner)
-      puts "after update_stats"
     end
-    puts "start top 5"
-    stats_ranked = summoner.stats_rankeds.order(total_games: :desc).limit(5)
-    puts "after top 5"
-    render json: {top5: stats_ranked}
+    top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
+    all_ranked = summoner.stats_rankeds
+    render json: {top5: top5, all_ranked: all_ranked}
   end
 
   def renew_stats_ranked
