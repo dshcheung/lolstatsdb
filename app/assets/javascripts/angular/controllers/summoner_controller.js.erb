@@ -138,13 +138,34 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     })
   };
   $scope.getMatchDetails = function (matchId) {
+    $scope.selectedMatch = matchId;
     $scope.searchMatchDetails = $scope.summonerInfo.searchData;
     $scope.searchMatchDetails.matchId = matchId;
     $http.post('/matches/get_match_details', $scope.searchMatchDetails).success(function(response){
       console.log(response);
+      $scope.summonerInfo.match.team = {};
+      $scope.summonerInfo.match.team.team100 = [];
+      $scope.summonerInfo.match.team.team200 = [];
+      for (var i = 0; i < response.details.participants.length; i++){
+        if (response.details.participants[i]['teamId'] == 100){
+          $scope.summonerInfo.match.team.team100.push(response.details.participants[i]);
+        } else {
+          $scope.summonerInfo.match.team.team200.push(response.details.participants[i]);
+        }
+      }
       $scope.summonerInfo.match.details = response.details
+      console.log($scope.summonerInfo.match);
     })
   };
+
+  $scope.convertMsToDay = function (target){
+    var date = new Date();
+    timeNow = date.getTime();
+    var diff = timeNow - target;
+    return moment.unix(target/1000).fromNow();
+  }
+
+  $scope.timesToRepeat = ['a','a'];
 
   //table sorting stuff
   $scope.predicate = "";

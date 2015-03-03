@@ -39,3 +39,10 @@ app.directive('leagueTab', function(){
     templateUrl: "<%=  asset_path('partials/leagueTabPartial.html') %>"
   };
 });
+
+app.directive('matchesTab', function(){
+  return {
+    restrict: 'E',
+    templateUrl: "<%=  asset_path('partials/matchesTabPartial.html') %>"
+  };
+});

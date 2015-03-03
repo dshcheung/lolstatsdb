@@ -1,0 +1,93 @@
+@import "variables";
+matches-tab > div.row {
+  width: 100%;
+  margin: 15px 0;
+  border-radius: 10px;
+  background: white;
+  border: 1px solid black;
+  div.matches-table {
+    div.matches-title {
+      text-align: center;
+      border-bottom: 1px solid rgb(221,221,221);
+    }
+    div.matches-body {
+      margin: 15px;
+      padding: 0;
+      color: white;
+      div.matches-history {
+        margin: 0;
+        width: 240px;
+        padding: 0;
+        div.history-links {
+          button {
+            background-color: rgb(29, 45, 65);
+            border: 1px solid black;
+            padding: 0;
+            text-align: center;
+            width: 100%;
+            div.champion-info {
+              float: left;
+              margin: 15px 10px;
+              img {
+                width: 50px;
+                border-radius: 5px;
+              }
+            }
+            div.match-info {
+              margin: 0;
+              div.row {
+                margin: 0;
+              }
+            }
+          }
+          button:first-child {
+            border-top-left-radius: 10px;
+          }
+          button:last-child {
+            border-bottom-left-radius: 10px;
+          }
+          button.selected {
+            background-color: rgb(9,72,128);
+          }
+          button > div {
+            display: inline-block;
+          }
+        }
+      }
+      div.matches-details {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        width: calc(100% - 270px);
+        height: 820px;
+        border: 1px solid black;
+        margin: 0;
+        padding: 0;
+        background-color: rgb(29, 45, 65);
+        div.details-table {
+          text-align: center;  
+          table.table.table-heading {
+            margin: 0;
+            background: rgba(0,0,0,0);
+            thead {
+              th {
+                text-align: center;
+              }
+            }
+          }
+          div.table-body {
+            table {
+              margin: 0;
+              tbody {
+                tr:last-child {
+                  td {
+                    border-bottom: 1px solid rgb(221, 221, 221);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
