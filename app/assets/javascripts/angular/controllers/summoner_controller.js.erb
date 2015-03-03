@@ -127,14 +127,24 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     })
   }
 
-  $scope.summonerInfo.matches = {}
+  $scope.summonerInfo.matches = {};
+  $scope.summonerInfo.match = {};
   $scope.getMatchHistory = function () {
     $http.post('/matches/get_match_histories', $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
-      $scope.summonerInfo.matches.history = response.match_history;
+      $scope.summonerInfo.matches = response.match_history;
+      $scope.getMatchDetails(response.match_history[0].matchId);
       // $scope.getPositionFrequency();
     })
-  }
+  };
+  $scope.getMatchDetails = function (matchId) {
+    $scope.searchMatchDetails = $scope.summonerInfo.searchData;
+    $scope.searchMatchDetails.matchId = matchId;
+    $http.post('/matches/get_match_details', $scope.searchMatchDetails).success(function(response){
+      console.log(response);
+      $scope.summonerInfo.match.details = response.details
+    })
+  };
 
   //table sorting stuff
   $scope.predicate = "";

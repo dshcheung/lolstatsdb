@@ -10,7 +10,6 @@ class CreateMatchHistories < ActiveRecord::Migration
       t.string :winner
       t.string :role
       t.string :lane
-      t.text :match
 
       t.timestamps
     end
