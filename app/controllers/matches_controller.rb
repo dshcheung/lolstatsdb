@@ -1,10 +1,10 @@
 class MatchesController < ApplicationController
   def get_match_histories
-    matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(:match_creation).limit(10).reverse
+    matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
     if matches.empty?
       update_match_histories(params['id'], params['region'])
     end
-    matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(:match_creation).limit(10).reverse
+    matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
     render json: {match_history: matches}
   end
 
@@ -30,13 +30,16 @@ class MatchesController < ApplicationController
           else
             winner = "false"
           end
+          champ = Champion.find_by(championId: match['participants'][0]['championId'], region: region)
           MatchHistory.create(summonerId: id,
                               matchId: match['matchId'],
                               match_creation: match['matchCreation'],
                               region: region,
                               queue: match['queueType'],
-                              championId: match['championId'],
                               winner: winner,
+                              championId: match['participants'][0]['championId'],
+                              champion_name: champ.name,
+                              champion_key: champ.name_key,
                               role: match['participants'][0]['timeline']['role'],
                               lane: match['participants'][0]['timeline']['lane'])
         end
@@ -53,9 +56,7 @@ class MatchesController < ApplicationController
 
   def get_match_details
     match = MatchDetail.find_by(matchId: params['matchId'], region: params['region'])
-    puts "before check"
     if match.nil?
-      puts "checking"
       update_match_details(params['matchId'], params['region'])
     end
     match = MatchDetail.find_by(matchId: params['matchId'], region: params['region'])
@@ -77,18 +78,22 @@ class MatchesController < ApplicationController
                            participants: response['participants'],
                            participant_identities: response['participantIdentities'])
         response['participants'].each_with_index do |participant, index|
-          if match['participants'][0]['stats']['winner']
+          puts index
+          if participant['stats']['winner']
             winner = "true"
           else
             winner = "false"
           end
+          champ = Champion.find_by(championId: participant['championId'], region: region)
           MatchHistory.create(summonerId: response['participantIdentities'][index]['player']['summonerId'],
                               matchId: response['matchId'],
                               match_creation: response['matchCreation'],
                               region: region,
                               queue: response['queueType'],
-                              championId: participant['championId'],
                               winner: winner,
+                              championId: participant['championId'],
+                              champion_name: champ.name,
+                              champion_key: champ.name_key,
                               role: participant['timeline']['role'],
                               lane: participant['timeline']['lane'])
         end

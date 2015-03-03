@@ -53,6 +53,8 @@ ActiveRecord::Schema.define(version: 20150303104911) do
     t.string   "region"
     t.string   "queue"
     t.integer  "championId"
+    t.string   "champion_name"
+    t.string   "champion_key"
     t.string   "winner"
     t.string   "role"
     t.string   "lane"

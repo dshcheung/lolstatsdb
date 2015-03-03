@@ -7,6 +7,8 @@ class CreateMatchHistories < ActiveRecord::Migration
       t.string :region
       t.string :queue
       t.integer :championId
+      t.string :champion_name
+      t.string :champion_key
       t.string :winner
       t.string :role
       t.string :lane

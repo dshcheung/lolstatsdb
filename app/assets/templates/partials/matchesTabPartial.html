@@ -1,0 +1,76 @@
+<div class="row">
+  <div class="matches-table">
+    <div class="matches-title">
+      <label>Match History</label>
+    </div>
+    <div class="matches-body col-xs-12">
+      <div class="matches-history col-xs-3">
+        <div class="history-links">
+          <button ng-repeat="match in summonerInfo.matches track by $index" ng-class="{'selected': match.matchId == selectedMatch}" ng-click="getMatchDetails(match.matchId)">
+            <div class="champion-info">
+              <img src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{match.champion_key}}.png">
+            </div>
+            <div class="match-info">
+              <div class="row">
+                <label>{{match.queue | split:'_':0}}</label>
+              </div>
+              <div class="row">
+                <div class="match-winner">
+                  <label ng-show="match.winner =='true'">Victory</label>
+                  <label ng-show="match.winner =='false'">Defeat</label>
+                </div>
+              </div>
+              <div class="row">
+                <label>{{convertMsToDay(match.match_creation)}}</label>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div class="matches-details col-xs-8">
+        <div class="details-table">
+          <table class="table table-heading">
+            <thead>
+              <th class="col-xs-3">
+                <label>Summoner</label>
+              </th>
+              <th class="col-xs-2">
+                <label>K/D/A</label>
+              </th>
+              <th class="col-xs-1">
+                <label>CS</label>
+              </th>
+              <th class="col-xs-1">
+                <label>Wards</label>
+              </th>
+              <th class="col-xs-1">
+                <label>Gold</label>
+              </th>
+              <th class="col-xs-4">
+                <label>Items</label>
+              </th>
+            </thead>
+          </table>
+
+          <div class="table-body" ng-repeat="team in summonerInfo.match.team">
+            <div class="result-title">
+              <label>Victory</label>
+            </div>
+            <table class="table">
+              <tbody>
+                <tr ng-repeat="summoner in team">
+                  <td class="col-xs-3">Name</td>
+                  <td class="col-xs-3">K/D/A</td>
+                  <td class="col-xs-1">CS</td>
+                  <td class="col-xs-1">Wards</td>
+                  <td class="col-xs-1">Gold</td>
+                  <td class="col-xs-4">Items</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
