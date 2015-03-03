@@ -1,0 +1,93 @@
+@import "variables";
+league-tab > div.row {
+  width: 100%;
+  margin: 15px 0;
+  border-radius: 10px;
+  background: white;
+  border: 1px solid black;
+  div.league-table {
+    i.icon-disabled {
+      color: $icon-color-1;
+    }
+    i.fa-check {
+      color: rgb(0, 128, 0);
+    }
+    i.fa-times {
+      color: rgb(255, 0, 0);
+    }
+    div.league-title {
+      margin: 15px;
+      height: 150px;
+      div.league-badge {
+        img {
+          width: 150px;
+          position: relative;
+          bottom: 28px;
+        }
+      }
+      div.page-icon {
+        margin: 35px 0;
+        font-size: 200%;
+      }
+      div.league-info {
+        margin: 50px 0 50px 10px;
+        position: relative;
+        bottom: 15px;
+        font-size: 100%;
+      }
+      @media screen and (min-width: 600px) {
+        div.league-info {
+          font-size: 150%;
+          margin: 39px 0 39px 10px;
+          bottom: 10px;
+        }
+      }
+      @media screen and (min-width: 992px) {
+        div.league-info {
+          font-size: 200%;
+          margin: 30px 0 30px 10px;
+          bottom: 0;
+        }
+      }
+      div {
+        display: inline-block;
+      }
+      div.page-icon, div.league-info {
+        div {
+          display: block;
+        }
+      }
+    }
+    div.league-promo, div.league-normal {
+      text-align: center;
+      margin: 15px;
+      table {
+        border-top: 2px $border-color-2;
+        border-bottom: 2px $border-color-2;
+        thead {
+          background: $background-theme-4;
+          tr > th {
+            text-align: center;
+          }
+        }
+        tbody {
+          tr > td:nth-child(2) {
+            text-align: left;
+            padding: 2px;
+            div {
+              display: inline;
+              img {
+                width: 35px;
+                border: 1px solid black;
+                border-radius: 5px;
+              }
+            }
+          }
+          tr > td:nth-child(4) {
+            color: $font-color-1;
+          }
+        }
+      }
+    }
+  }
+}

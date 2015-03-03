@@ -4,7 +4,6 @@ Profile page
 #/api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/ranked (ranked stats)
 /api/lol/{region}/v2.2/matchhistory/{summonerId} (summary index)
 
-
 Runes
 /api/lol/{region}/v1.4/summoner/{summonerIds}/runes
 
@@ -16,7 +15,7 @@ Matches
 /api/lol/{region}/v2.2/match/{matchId} (detailed)
 
 Champtions
-/api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/ranked *
+#/api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/ranked *
 
 League
-/api/lol/{region}/v2.5/league/by-summoner/{summonerIds}
+#/api/lol/{region}/v2.5/league/by-summoner/{summonerIds}
