@@ -32,20 +32,81 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
   };
   $scope.getLeagueAll = function (){
     var leagueEntry = $scope.summonerInfo.league.entry
-    var data = $scope.summonerInfo.searchData;
+    $scope.leagueSearch = $scope.summonerInfo.searchData;
+    $scope.leagueSearch.queue = leagueEntry.solo5.queue;
+    $scope.leagueSearch.leagueName = leagueEntry.solo5.name;
+    $scope.leagueSearch.tier = leagueEntry.solo5.tier;
+    $scope.leagueSearch.division = leagueEntry.solo5.entries[0].division;
 
-    data.queue = leagueEntry.solo5.queue;
-    data.leagueName = leagueEntry.solo5.name;
-    data.tier = leagueEntry.solo5.tier;
-    data.division = leagueEntry.solo5.entries[0].division;
-
-    $http.post('/summoner/get_league_all', data).success(function(response) {
+    $http.post('/summoner/get_league_all', $scope.leagueSearch).success(function(response) {
         console.log(response);
         $scope.summonerInfo.league.all = response;
+        $scope.getSummonersIcons(response.league_promo, "promoSummoners");
+        $scope.getSummonersIcons(response.league_normal, "normalSummoners");
     }).error(function(response){
       // noty error messages
     })
   };
+  $scope.changeLeagueAll = function (division){
+    $scope.changeLeagueSearch = $scope.leagueSearch;
+    switch (division){
+      case 1:
+        $scope.changeLeagueSearch.division = "I";
+        break;
+      case 2:
+        $scope.changeLeagueSearch.division = "II";
+        break;
+      case 3:
+        $scope.changeLeagueSearch.division = "III";
+        break;
+      case 4:
+        $scope.changeLeagueSearch.division = "IV";
+        break;
+      case 5:
+        $scope.changeLeagueSearch.division = "V";
+        break;
+    }
+    $http.post('/summoner/get_league_page', $scope.changeLeagueSearch).success(function(response){
+      console.log(response);
+      $scope.summonerInfo.league.all = response;
+      $scope.getSummonersIcons(response.league_promo, response.league_normal);
+    })
+  }
+  //paginate for league page stuff
+  $scope.leaguePage = {};
+  $scope.leaguePage.current = 1;
+  $scope.leaguePage.onPageChangeUp = function (){
+    if (this.current > 1){
+      this.current -= 1;
+    $scope.changeLeagueAll(this.current);
+    }
+    console.log(this.current);
+  };
+  $scope.leaguePage.onPageChangeDown = function (){
+    if (this.current < 5){
+      this.current += 1;
+    $scope.changeLeagueAll(this.current);
+    }
+    console.log(this.current);
+  };
+  $scope.getSummonersIcons = function (list1, list2){
+    $scope.iconSearch = {};
+    $scope.iconSearch.region = $scope.leagueSearch.region;
+    $scope.iconSearch.summonerList = [];
+    for (var index in list1) {
+      $scope.iconSearch.summonerList.push(list1[index].summonerId);
+    }
+    for (var index in list2) {
+      $scope.iconSearch.summonerList.push(list2[index].summonerId);
+    }
+    if ($scope.iconSearch.summonerList[0] != undefined){
+      $http.post('/summoner/get_icon_list', $scope.iconSearch).success(function(response){
+        console.log(response);
+        $scope.summonerInfo.league.all.summoners = response.summoners;
+      })
+    }
+  }
+
   $scope.summonerInfo.stats_summary = {}
   $scope.getStatsSummary = function (){
     $http.post('/summoner/get_stats_summary', $scope.summonerInfo.searchData).success(function(response){

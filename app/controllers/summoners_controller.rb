@@ -68,16 +68,23 @@ class SummonersController < ApplicationController
     if summoner_existance.nil?
       update_league_all(params['region'], params['id'])
     end
-    league_promo = League.where(region: params['region'], queue: params['queue'], name: params['leagueName'], tier: params['tier'], division: params['division'], league_points: 100)
-    league_normal = League.where(region: params['region'], queue: params['queue'], name: params['leagueName'], tier: params['tier'], division: params['division'], league_points: 0..99)
-    render json: {league_promo: league_promo, league_normal: league_normal}
+    render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName'])
   end
 
   def renew_league_all
     update_league_all(params['region'], params['id'])
-    league_promo = League.where(region: params['region'], queue: params['queue'], name: params['leagueName'], tier: params['tier'], division: params['division'], league_points: 100)
-    league_normal = League.where(region: params['region'], queue: params['queue'], name: params['leagueName'], tier: params['tier'], division: params['division'], league_points: 0..99)
-    render json: {league_promo: league_promo, league_normal: league_normal}
+    render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName'])
+  end
+
+  def get_league_page
+    render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName'])
+  end
+
+  def league_page(region, queue, tier, division, leagueName)
+    badge_icon = ActionController::Base.helpers.asset_path("badge" +  tier.capitalize + division + ".png")
+    league_promo = League.where(region: region, queue: queue, name: leagueName, tier: tier, division: division, league_points: 100).order(:league_points)
+    league_normal = League.where(region: region, queue: queue, name: leagueName, tier: tier, division: division, league_points: 0..99).order(:league_points).reverse
+    return {league_promo: league_promo, league_normal: league_normal, badge_icon: badge_icon}
   end
 
   def destroy_old_leagues(id, queue)
@@ -124,6 +131,27 @@ class SummonersController < ApplicationController
         retry
       when 2
         return e
+      end
+    end
+  end
+
+  def get_icon_list
+    require 'open-uri'
+    require 'json'
+
+    @tries = 0
+    begin
+      list = params['summonerList'].join(',')
+      region = params['region'].downcase
+      url = "https://#{region}.api.pvp.net/api/lol/#{region}/v1.4/summoner/#{list}?api_key=#{ENV['API_KEY']}"
+      response = JSON.parse(open(url).read)
+      render json: {summoners: response}
+    rescue OpenURI::HTTPError => e
+      case rescue_me(e)
+      when 1
+        retry
+      when 2
+        return render json: {message: "too many requests!"}
       end
     end
   end
