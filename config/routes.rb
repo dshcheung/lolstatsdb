@@ -20,4 +20,7 @@ Rails.application.routes.draw do
   post '/summoner/renew_stats_ranked', to: 'summoners#renew_stats_ranked'
 
   post '/matches/get_match_histories', to: 'matches#get_match_histories'
+  post '/matches/renew_match_histories', to: 'matches#renew_match_histories'
+
+  post '/matches/get_match_details', to: 'matches#get_match_details'
 end
