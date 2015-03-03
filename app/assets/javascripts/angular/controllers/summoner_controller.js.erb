@@ -127,8 +127,14 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     })
   }
 
-  //tooltip stuff
-  $scope.tipCount = 0;
+  $scope.summonerInfo.matches = {}
+  $scope.getMatchHistory = function () {
+    $http.post('/matches/get_match_histories', $scope.summonerInfo.searchData).success(function(response){
+      console.log(response);
+      $scope.summonerInfo.matches.history = response.match_history;
+      // $scope.getPositionFrequency();
+    })
+  }
 
   //table sorting stuff
   $scope.predicate = "";
@@ -157,6 +163,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     $scope.getLeagueEntry();
     $scope.getStatsSummary();
     $scope.getStatsRanked();
+    $scope.getMatchHistory();
   };
   $scope.tabs.getInfo.runes = function (){
     console.log("getting runes");
@@ -174,5 +181,3 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     console.log("getting league");
   };
 }])
-
-// "HiMyNameIsBob".split(/(?=[A-Z])/)
