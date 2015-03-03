@@ -84,7 +84,10 @@ class SummonersController < ApplicationController
     badge_icon = ActionController::Base.helpers.asset_path("badge" +  tier.capitalize + division + ".png")
     league_promo = League.where(region: region, queue: queue, name: leagueName, tier: tier, division: division, league_points: 100).order(:league_points)
     league_normal = League.where(region: region, queue: queue, name: leagueName, tier: tier, division: division, league_points: 0..99).order(:league_points).reverse
-    return {league_promo: league_promo, league_normal: league_normal, badge_icon: badge_icon}
+    if tier == "CHALLENGER"
+      league_challenger = League.where(region: region, queue: queue, name: leagueName, tier: tier, division: division).order(:league_points).reverse
+    end
+    return {league_promo: league_promo, league_normal: league_normal, league_challenger: league_challenger, badge_icon: badge_icon}
   end
 
   def destroy_old_leagues(id, queue)
@@ -141,11 +144,25 @@ class SummonersController < ApplicationController
 
     @tries = 0
     begin
-      list = params['summonerList'].join(',')
       region = params['region'].downcase
-      url = "https://#{region}.api.pvp.net/api/lol/#{region}/v1.4/summoner/#{list}?api_key=#{ENV['API_KEY']}"
-      response = JSON.parse(open(url).read)
-      render json: {summoners: response}
+      source_list = params['summonerList']
+      length = source_list.length
+      if length > 40
+        list1 = source_list[0..39].join(',')
+        url = "https://#{region}.api.pvp.net/api/lol/#{region}/v1.4/summoner/#{list1}?api_key=#{ENV['API_KEY']}"
+        response1 = JSON.parse(open(url).read)
+
+        list2 = source_list[40..length-1].join(',')
+        url = "https://#{region}.api.pvp.net/api/lol/#{region}/v1.4/summoner/#{list2}?api_key=#{ENV['API_KEY']}"
+        response2 = JSON.parse(open(url).read)
+        render json: {summoners: response1.merge(response2)}
+      else
+        list = source_list.join(',')
+        region = params['region'].downcase
+        url = "https://#{region}.api.pvp.net/api/lol/#{region}/v1.4/summoner/#{list}?api_key=#{ENV['API_KEY']}"
+        response = JSON.parse(open(url).read)
+        render json: {summoners: response}
+      end
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
       when 1
