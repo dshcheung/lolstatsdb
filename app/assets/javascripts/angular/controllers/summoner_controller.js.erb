@@ -1,4 +1,4 @@
-app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scope, $routeParams, $http){
+app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', function($scope, $routeParams, $http, $window){
   // Summoner Information
   // Set Initial Information
   $scope.summonerInfo = {};
@@ -136,9 +136,15 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
       console.log(response);
       $scope.summonerInfo.matches = response.match_history;
       $scope.getMatchDetails(response.match_history[0].matchId, 0);
-      // $scope.getPositionFrequency();
+      $scope.getPositionFrequency();
     })
   };
+  $scope.getPositionFrequency = function(){
+    $http.post($scope.routesLink.positionFrequency, $scope.summonerInfo.searchData).success(function(response){
+      console.log(response);
+      $scope.summonerInfo.positionFrequency = response.frequency;
+    })
+  }
   $scope.matchDetailIndex = undefined;
   $scope.getMatchDetails = function (matchId, index) {
     if(index != $scope.matchDetailIndex){
@@ -185,6 +191,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     $scope.routesLink.statsRanked = "/summoner/get_stats_ranked";
     $scope.routesLink.matchHistory = "/matches/get_match_histories";
     $scope.routesLink.matchDetail = "/matches/get_match_details";
+    $scope.routesLink.positionFrequency = '/matches/get_position_frequency';
   }
   $scope.setRoutesRenew = function (){
     $scope.routesLink.leagueEntry = "/summoner/renew_league_entry";
@@ -212,6 +219,36 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
   $scope.getStatsRanked();
   $scope.getMatchHistory();
 
+  $scope.data = {
+    series: ['Sales', 'Income', 'Expense', 'Laptops', 'Keyboards'],
+    data: [{
+      x: "Laptops",
+      y: [100, 500, 0],
+      tooltip: "this is tooltip"
+    }, {
+      x: "Desktops",
+      y: [300, 100, 100]
+    }, {
+      x: "Mobiles",
+      y: [351]
+    }, {
+      x: "Tablets",
+      y: [54, 0, 879]
+    }]
+  };
+
+  $scope.profileTab = {};
+  $scope.profileTab.config = {
+    tooltips: false,
+    labels: false,
+    mouseover: function() {},
+    mouseout: function() {},
+    click: function() {},
+    legend: {
+      display: true,
+      position: 'right'
+    },
+    "innerRadius": "100",
+    colors: ["rgb(214, 65, 34)", "rgb(136, 68, 153)", "rgb(87, 152, 34)", "rgb(34, 126, 152)", "rgb(185, 154, 69)", "rgb(152, 75, 34)"]
+  };
 }])
-
-
