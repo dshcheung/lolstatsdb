@@ -41,8 +41,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     $http.post('/summoner/get_league_all', $scope.leagueSearch).success(function(response) {
         console.log(response);
         $scope.summonerInfo.league.all = response;
-        $scope.getSummonersIcons(response.league_promo, "promoSummoners");
-        $scope.getSummonersIcons(response.league_normal, "normalSummoners");
+        $scope.getSummonersIcons(response.league_promo, response.league_normal);
     }).error(function(response){
       // noty error messages
     })
@@ -158,12 +157,18 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     })
   };
 
+  $scope.staticData = {};
+  $scope.staticData.summonerSpells = {1: "Boost", 2: "Clairvoyance", 3: "Exhaust", 4: "Flash", 6: "Haste", 7: "Heal", 11: "Smite", 12: "Teleport", 13: "Mana", 14: "Dot", 17: "OdinGarrison", 21: "Barrier"};
+  $scope.getSummonerSpell = function(id){
+    return $scope.staticData.summonerSpells[id];
+  };
+
   $scope.convertMsToDay = function (target){
     var date = new Date();
     timeNow = date.getTime();
     var diff = timeNow - target;
     return moment.unix(target/1000).fromNow();
-  }
+  };
 
   $scope.timesToRepeat = ['a','a'];
 

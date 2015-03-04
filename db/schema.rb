@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 20150303104911) do
 
   create_table "match_details", force: true do |t|
     t.integer  "matchId"
-    t.integer  "region"
+    t.string   "region"
     t.text     "participants"
     t.text     "participant_identities"
     t.datetime "created_at"

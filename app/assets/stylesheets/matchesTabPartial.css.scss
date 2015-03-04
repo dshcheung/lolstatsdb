@@ -75,12 +75,77 @@ matches-tab > div.row {
             }
           }
           div.table-body {
+            div.result-title {
+              background-color: rgb(18,27,36);
+              height: 50px;
+              label {
+                margin: 15px;
+              }
+              label.result-winner {
+                color: rgb(106, 171, 0);
+              }
+              label.result-loser {
+                color: rgb(205, 29, 29);
+              }
+            }
             table {
               margin: 0;
               tbody {
                 tr:last-child {
                   td {
                     border-bottom: 1px solid rgb(221, 221, 221);
+                  }
+                }
+                tr {
+                  td.summoner-champ {
+                    div.champ-info {
+                      float: left;
+                      display: inline-flex;
+                      img {
+                        height: 40px;
+                        width: 40px;
+                      }
+                      div.summoner-spells {
+                        display: inline-block;
+                        img {
+                          display: block;
+                          width: 20px;
+                          height: 20px;
+                        }
+                      }
+                      a {
+                        height: 20px;
+                        margin: 10px 5px;
+                        color: rgb(255, 219, 76);
+                      }
+                    }
+                  }
+                  td.summoner-kda, td.summoner-cs, td.summoner-wards, td.summoner-gold {
+                    div {
+                      margin: 10px 0;
+                    }
+                  }
+                  td.summoner-wards {
+                    div > span:first-child {
+                      color: rgb(39, 174, 96);
+                    }
+                    div > span:last-child {
+                      color: rgb(211, 84, 0);
+                    }
+                  }
+                  td.summoner-gold {
+                    color: gold;
+                  }
+                  td.summoner-items {
+                    div {
+                      display: inherit;
+                      width:40px;
+                      height:40px;
+                      img {
+                        width:40px;
+                        height:40px;
+                      }
+                    }
                   }
                 }
               }
