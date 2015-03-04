@@ -118,7 +118,7 @@ class MatchesController < ApplicationController
 
   def get_position_frequency
     matches = MatchHistory.where(summonerId: params["id"], region: params["region"]).order(match_creation: :desc).limit(10)
-    frequency = { data: [{x: "Top", y: [0]}, {x: "Middle", y: [0]}, {x: "Jungle", y: [0]}, {x: "Support", y: [0]}, {x: "ADC", y: [0]}]}
+    frequency = { data: [{x: "Top", y: [0], tooltip: "Top"}, {x: "Middle", y: [0], tooltip: "Middle"}, {x: "Jungle", y: [0], tooltip: "Jungle"}, {x: "Support", y: [0], tooltip: "Support"}, {x: "ADC", y: [0], tooltip: "ADC"}]}
 
     adc = {"Ashe"=> true, "Caitlyn"=> true, "Corki"=> true, "Draven"=> true, "Ezreal"=> true, "Graves"=> true, "Jinx"=> true, "Kalista"=> true, "Kog'Maw"=> true, "Lucian"=> true, "Miss Fortune"=> true, "Quinn"=> true, "Sivir"=> true, "Teemo"=> true, "Tristana"=> true, "Twitch"=> true, "Urgot"=> true, "Varus"=> true, "Vayne"=> true}
 
