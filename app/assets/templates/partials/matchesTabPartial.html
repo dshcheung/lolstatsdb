@@ -52,19 +52,51 @@
             </thead>
           </table>
 
-          <div class="table-body" ng-repeat="team in summonerInfo.match.team">
+          <div class="table-body" ng-repeat="team in summonerInfo.match.team track by $index">
             <div class="result-title">
-              <label>Victory</label>
+              <label class="result-winner" ng-show="team[0].stats.winner">Winning Team</label>
+              <label class="result-loser" ng-show="!team[0].stats.winner">Losing Team</label>
             </div>
             <table class="table">
               <tbody>
                 <tr ng-repeat="summoner in team">
-                  <td class="col-xs-3">Name</td>
-                  <td class="col-xs-3">K/D/A</td>
-                  <td class="col-xs-1">CS</td>
-                  <td class="col-xs-1">Wards</td>
-                  <td class="col-xs-1">Gold</td>
-                  <td class="col-xs-4">Items</td>
+                  <td class="summoner-champ col-xs-3">
+                    <div class="champ-info">
+                      <img src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{summoner.champion_name_key}}.png">
+                      <div class="summoner-spells">
+                        <img src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/spell/Summoner{{getSummonerSpell(summoner.spell1Id)}}.png">
+                        <img src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/spell/Summoner{{getSummonerSpell(summoner.spell2Id)}}.png">
+                      </div>
+                      <a href="/#/summoner/{{summonerInfo.match.details.region}}/{{summonerInfo.match.details.participant_identities[summoner.participantId - 1].player.summonerId}}">{{summonerInfo.match.details.participant_identities[summoner.participantId - 1].player.summonerName}}</a>
+                    </div>
+                  </td>
+                  <td class="summoner-kda col-xs-2">
+                    <div>{{summoner.stats.kills}}/{{summoner.stats.deaths}}/{{summoner.stats.assists}}</div>
+                  </td>
+                  <td class="summoner-cs col-xs-1">
+                    <div>
+                      {{summoner.stats.minionsKilled}}
+                    </div>
+                  </td>
+                  <td class="summoner-wards col-xs-1">
+                    <div>
+                      <span>{{summoner.stats.sightWardsBoughtInGame}}</span>/<span>{{summoner.stats.visionWardsBoughtInGame}}</span>
+                    </div>
+                  </td>
+                  <td class="summoner-gold col-xs-1">
+                    <div>
+                      {{summoner.stats.goldEarned/1000 | number:1}}K
+                    </div>
+                  </td>
+                  <td class="summoner-items col-xs-4">
+                    <div><img ng-show="summoner.stats.item0 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item0}}.png "></div>
+                    <div><img ng-show="summoner.stats.item1 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item1}}.png "></div>
+                    <div><img ng-show="summoner.stats.item2 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item2}}.png "></div>
+                    <div><img ng-show="summoner.stats.item3 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item3}}.png "></div>
+                    <div><img ng-show="summoner.stats.item4 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item4}}.png "></div>
+                    <div><img ng-show="summoner.stats.item5 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item5}}.png "></div>
+                    <div><img ng-show="summoner.stats.item6 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item6}}.png "></div>
+                  </td>
                 </tr>
               </tbody>
             </table>

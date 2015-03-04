@@ -72,19 +72,19 @@ class MatchesController < ApplicationController
       url = "https://#{region.downcase}.api.pvp.net/api/lol/#{region.downcase}/v2.2/match/#{matchId}?api_key=#{ENV['API_KEY']}"
       response = JSON.parse(open(url).read)
 
+      names = []
+      name_keys = []
       if not response.empty?
-        MatchDetail.create(matchId: response['matchId'],
-                           region: region,
-                           participants: response['participants'],
-                           participant_identities: response['participantIdentities'])
+        participants = []
         response['participants'].each_with_index do |participant, index|
-          puts index
           if participant['stats']['winner']
             winner = "true"
           else
             winner = "false"
           end
           champ = Champion.find_by(championId: participant['championId'], region: region)
+          names.push(champ.name)
+          name_keys.push(champ.name_key)
           MatchHistory.create(summonerId: response['participantIdentities'][index]['player']['summonerId'],
                               matchId: response['matchId'],
                               match_creation: response['matchCreation'],
@@ -96,7 +96,15 @@ class MatchesController < ApplicationController
                               champion_key: champ.name_key,
                               role: participant['timeline']['role'],
                               lane: participant['timeline']['lane'])
+
+          participants.push(participant)
+          participants[index][:champion_name] = champ.name
+          participants[index][:champion_name_key] = champ.name_key
         end
+        MatchDetail.create(matchId: response['matchId'],
+                           region: region,
+                           participants: participants,
+                           participant_identities: response['participantIdentities'])
       end
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
