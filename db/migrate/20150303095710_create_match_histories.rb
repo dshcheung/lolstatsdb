@@ -3,7 +3,7 @@ class CreateMatchHistories < ActiveRecord::Migration
     create_table :match_histories do |t|
       t.integer :summonerId
       t.integer :matchId
-      t.integer :match_creation
+      t.integer :match_creation, limit: 8
       t.string :region
       t.string :queue
       t.integer :championId
