@@ -1,9 +1,22 @@
-<div class="row">
+<div ng-show="matchesTabLoading" class="row">
   <div class="matches-table">
     <div class="matches-title">
       <label>Match History</label>
     </div>
-    <div class="matches-body col-xs-12">
+    <div class="matches-body loading-gif">
+      <img class="loading-gif" src="<%= asset_path('loading.gif') %>">
+    </div>
+  </div>
+</div>
+<div ng-show="!matchesTabLoading" class="row">
+  <div class="matches-table">
+    <div class="matches-title">
+      <label>Match History</label>
+    </div>
+    <div ng-show="summonerInfo.matches[0] == undefined" class="matches-no-record">
+      <h1>This Summoner Have Not Played In A Long Time</h1>
+    </div>
+    <div ng-show="summonerInfo.matches[0] != undefined" class="matches-body col-xs-12">
       <div class="matches-history col-xs-3">
         <div class="history-links">
           <button ng-repeat="match in summonerInfo.matches track by $index" ng-class="{'selected': match.matchId == selectedMatch}" ng-click="getMatchDetails(match.matchId, $index)">
@@ -27,7 +40,12 @@
           </button>
         </div>
       </div>
-      <div class="matches-details col-xs-8">
+      <div ng-show="matchSectionLoading" class="matches-details col-xs-8">
+        <div class="row loading-gif">
+          <img class="loading-gif" src="<%= asset_path('loading.gif') %>">
+        </div>
+      </div>
+      <div ng-show="summonerInfo.matches[0] != undefined || !matchSectionLoading" class="matches-details col-xs-8">
         <div class="details-table">
           <table class="table table-heading">
             <thead>

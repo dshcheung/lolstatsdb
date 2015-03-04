@@ -11,9 +11,7 @@ class SummonersController < ApplicationController
       name_no_space = params['summoner'].gsub(' ', "")
       url = "https://#{params['region']}.api.pvp.net/api/lol/#{params['region']}/v1.4/summoner/by-name/#{name_utf.downcase}?api_key=#{ENV['API_KEY']}"
       response = JSON.parse(open(url).read)
-      if response.empty?
-        render json: {success: true, summoner: nil}, status: 200
-      else
+      if not response.empty?
         response = response["#{name_no_space.downcase}"]
         summoner = Summoner.find_by(summonerId: response['id'])
         if summoner.nil?
@@ -21,8 +19,8 @@ class SummonersController < ApplicationController
         else
           summoner.update(name: response['name'], profileIconId: response['profileIconId'], level: response['summonerLevel'], summonerId: response['id'], region: params['region'])
         end
-        render json: {success: true, summoner: summoner}, status: 200
       end
+      render json: {success: true, summoner: summoner}, status: 200
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
       when 1
@@ -41,9 +39,7 @@ class SummonersController < ApplicationController
     begin
       url = "https://#{params['region']}.api.pvp.net/api/lol/#{params['region']}/v1.4/summoner/#{params['id']}?api_key=#{ENV['API_KEY']}"
       response = JSON.parse(open(url).read)
-      if response.empty?
-        render json: {success: true, summoner: nil}, status: 200
-      else
+      if not response.empty?
         response = response["#{params['id']}"]
         summoner = Summoner.find_by(summonerId: params['id'])
         if summoner.nil?
@@ -51,8 +47,8 @@ class SummonersController < ApplicationController
         else 
           summoner.update(name: response['name'], profileIconId: response['profileIconId'], level: response['summonerLevel'], summonerId: response['id'], region: params['region'])
         end
-        render json: {success: true, summoner: summoner}, status: 200
       end
+      render json: {success: true, summoner: summoner}, status: 200
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
       when 1
@@ -228,7 +224,7 @@ class SummonersController < ApplicationController
       when 1
         retry
       when 2
-        return e
+        return summoner.update(league: league, border_icon: nil)
       end
     end
   end
@@ -301,7 +297,7 @@ class SummonersController < ApplicationController
       when 1
         retry
       when 2
-        return e
+        return summoner.update(stats_summary: stats)
       end
     end
   end

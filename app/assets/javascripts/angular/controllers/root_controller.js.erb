@@ -20,15 +20,9 @@ app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$route
     };
 
     $http.post('/summoner/name', data).success(function(response){
-      if (response.summoner != null){
-        $location.path('/summoner/' + $scope.selectedRegion.code + '/' + response.summoner.summonerId);
-      } else {
-        //noty here
-        //no summoner with this name
-      }
+      $location.path('/summoner/' + $scope.selectedRegion.code + '/' + response.summoner.summonerId);
     }).error(function(response){
-      //noty here
-      //something is wrong with riot's server, please try again later
+      var n = noty({text: 'No Summoner With This Name In ' + $scope.selectedRegion.code});
     })
   }
 

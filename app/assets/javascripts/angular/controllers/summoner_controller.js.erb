@@ -14,23 +14,27 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', fu
       $scope.summonerInfo.level = response.summoner.level;
       $scope.summonerInfo.summonerId = response.summoner.summonerId;
     }).error(function(response){
-      // noty error messages
+      var n = noty({text: 'No Summoner With This Name In ' + $scope.selectedRegion.code});
     })
   };
   $scope.summonerInfo.league = {};
   $scope.queType = ["Solo 5x5", "Team 3x3", "Team 5x5"];
   $scope.badgeDefault = "<%= asset_path('badgeDefault.png') %>";
   $scope.getLeagueEntry = function (){
+    $scope.leagueTabLoading = true;
     $http.post($scope.routesLink.leagueEntry, $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
+      $scope.leagueTabLoading = false;
       $scope.summonerInfo.league.entry = response.league_entry;
       $scope.summonerInfo.borderIcon = response.border_icon;
       $scope.getLeagueAll();
     }).error(function(response){
+      $scope.leagueTabLoading = false;
       // noty error messages
     })
   };
   $scope.getLeagueAll = function (){
+    $scope.leagueTabLoading = true;
     var leagueEntry = $scope.summonerInfo.league.entry
     $scope.leagueSearch = $scope.summonerInfo.searchData;
     $scope.leagueSearch.queue = leagueEntry.solo5.queue;
@@ -40,9 +44,11 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', fu
 
     $http.post($scope.routesLink.leagueAll, $scope.leagueSearch).success(function(response) {
         console.log(response);
-        $scope.summonerInfo.league.all = response;
-        $scope.getSummonersIcons(response.league_promo, response.league_normal);
+      $scope.leagueTabLoading = false;
+      $scope.summonerInfo.league.all = response;
+      $scope.getSummonersIcons(response.league_promo, response.league_normal);
     }).error(function(response){
+      $scope.leagueTabLoading = false;
       // noty error messages
     })
   };
@@ -117,11 +123,17 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', fu
   };
   $scope.summonerInfo.stats_ranked = {}
   $scope.getStatsRanked = function (){
+    $scope.championTabLoading = true;
+    $scope.top5SectionLoading = true;
     $http.post($scope.routesLink.statsRanked, $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
+      $scope.championTabLoading = false;
+      $scope.top5SectionLoading = false;
       $scope.summonerInfo.stats_ranked_top5 = response.top5;
       $scope.summonerInfo.stats_ranked_all = response.all_ranked;
     }).error(function(response){
+      $scope.championTabLoading = false;
+      $scope.top5SectionLoading = false;
       // noty error messages
     })
   }
@@ -132,28 +144,40 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', fu
   $scope.summonerInfo.matches = {};
   $scope.summonerInfo.match = {};
   $scope.getMatchHistory = function () {
+    $scope.matchesTabLoading = true;
+    $scope.positionSectionLoading = true;
     $http.post($scope.routesLink.matchHistory, $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
+      $scope.matchesTabLoading = false;
+      $scope.positionSectionLoading = false;
       $scope.summonerInfo.matches = response.match_history;
       $scope.getMatchDetails(response.match_history[0].matchId, 0);
       $scope.getPositionFrequency();
+    }).error(function(response){
+      $scope.matchesTabLoading = false;
+      $scope.positionSectionLoading = false;
     })
   };
   $scope.getPositionFrequency = function(){
+    $scope.positionSectionLoading = true;
     $http.post($scope.routesLink.positionFrequency, $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
+      $scope.positionSectionLoading = false;
       $scope.summonerInfo.positionFrequency = response.frequency;
+    }).error(function(response){
+      $scope.positionSectionLoading = false;
     })
   }
   $scope.matchDetailIndex = undefined;
   $scope.getMatchDetails = function (matchId, index) {
+    $scope.matchSectionLoading = true;
     if(index != $scope.matchDetailIndex){
       $scope.matchDetailIndex = index;
       $scope.selectedMatch = matchId;
       $scope.searchMatchDetails = $scope.summonerInfo.searchData;
       $scope.searchMatchDetails.matchId = matchId;
       $http.post($scope.routesLink.matchDetail, $scope.searchMatchDetails).success(function(response){
-        console.log(response);
+        $scope.matchSectionLoading = false;
         $scope.summonerInfo.match.team = {};
         $scope.summonerInfo.match.team.team100 = [];
         $scope.summonerInfo.match.team.team200 = [];
@@ -166,6 +190,9 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', fu
         }
         $scope.summonerInfo.match.details = response.details
         console.log($scope.summonerInfo.match);
+      }).error(function(response){
+        $scope.matchSectionLoading = false;
+        // noty message
       })
     }
   };

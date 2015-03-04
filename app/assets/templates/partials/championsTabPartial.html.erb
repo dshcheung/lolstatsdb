@@ -1,9 +1,20 @@
 <div class="row">
-  <div class="ranked-stats">
+  <div ng-show="championTabLoading" class="ranked-stats">
     <div class="ranked-title">
       <label>Rank Champion Stats</label>
     </div>
-    <div class="ranked-heading row">
+    <div class="ranked-body loading-gif">
+      <img class="loading-gif" src="<%= asset_path('loading.gif') %>">
+    </div>
+  </div>
+  <div ng-show="!championTabLoading" class="ranked-stats">
+    <div class="ranked-title">
+      <label>Rank Champion Stats</label>
+    </div>
+    <div ng-show="!summonerInfo.stats_ranked_all.length"class="loading-gif ranked-body row">
+      <h1>This Summoner Is Unranked</h1>
+    </div>
+    <div ng-show="summonerInfo.stats_ranked_all.length" class="ranked-heading row">
       <div class="col-xs-2"><a ng-click="predicate = 'champion_name'; reverse=!reverse"><label>Champ</label></a></div>
       <div class="hidden-xs col-sm-1"><a ng-click="predicate = 'total_wins'; reverse=!reverse"><label>Wins</label></a></div>
       <div class="hidden-xs col-sm-1"><a ng-click="predicate = 'total_losses'; reverse=!reverse"><label>Losses</label></a></div>
@@ -15,7 +26,7 @@
       <div class="col-xs-1"><a ng-click="predicate = 'average_minions'; reverse=!reverse"><label>CS</label></a></div>
       <div class="col-xs-2"><a ng-click="predicate = 'average_gold'; reverse=!reverse"><label>Gold</label></a></div>
     </div>
-    <div class="ranked-body row" ng-repeat="champ in summonerInfo.stats_ranked_all | orderBy:predicate:reverse">
+    <div ng-show="summonerInfo.stats_ranked_all.length" class="ranked-body row" ng-repeat="champ in summonerInfo.stats_ranked_all | orderBy:predicate:reverse">
       <div class="champ champ-info col-xs-2">
         <div>
           <div class="info-image"><img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{champ.champion_name_key}}.png "></div>
