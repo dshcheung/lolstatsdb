@@ -6,7 +6,7 @@
     <div class="matches-body col-xs-12">
       <div class="matches-history col-xs-3">
         <div class="history-links">
-          <button ng-repeat="match in summonerInfo.matches track by $index" ng-class="{'selected': match.matchId == selectedMatch}" ng-click="getMatchDetails(match.matchId)">
+          <button ng-repeat="match in summonerInfo.matches track by $index" ng-class="{'selected': match.matchId == selectedMatch}" ng-click="getMatchDetails(match.matchId, $index)">
             <div class="champion-info">
               <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{match.champion_key}}.png">
             </div>

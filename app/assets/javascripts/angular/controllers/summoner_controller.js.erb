@@ -132,29 +132,33 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http',function($scop
     $http.post('/matches/get_match_histories', $scope.summonerInfo.searchData).success(function(response){
       console.log(response);
       $scope.summonerInfo.matches = response.match_history;
-      $scope.getMatchDetails(response.match_history[0].matchId);
+      $scope.getMatchDetails(response.match_history[0].matchId, 0);
       // $scope.getPositionFrequency();
     })
   };
-  $scope.getMatchDetails = function (matchId) {
-    $scope.selectedMatch = matchId;
-    $scope.searchMatchDetails = $scope.summonerInfo.searchData;
-    $scope.searchMatchDetails.matchId = matchId;
-    $http.post('/matches/get_match_details', $scope.searchMatchDetails).success(function(response){
-      console.log(response);
-      $scope.summonerInfo.match.team = {};
-      $scope.summonerInfo.match.team.team100 = [];
-      $scope.summonerInfo.match.team.team200 = [];
-      for (var i = 0; i < response.details.participants.length; i++){
-        if (response.details.participants[i]['teamId'] == 100){
-          $scope.summonerInfo.match.team.team100.push(response.details.participants[i]);
-        } else {
-          $scope.summonerInfo.match.team.team200.push(response.details.participants[i]);
+  $scope.matchDetailIndex = undefined;
+  $scope.getMatchDetails = function (matchId, index) {
+    if(index != $scope.matchDetailIndex){
+      $scope.matchDetailIndex = index;
+      $scope.selectedMatch = matchId;
+      $scope.searchMatchDetails = $scope.summonerInfo.searchData;
+      $scope.searchMatchDetails.matchId = matchId;
+      $http.post('/matches/get_match_details', $scope.searchMatchDetails).success(function(response){
+        console.log(response);
+        $scope.summonerInfo.match.team = {};
+        $scope.summonerInfo.match.team.team100 = [];
+        $scope.summonerInfo.match.team.team200 = [];
+        for (var i = 0; i < response.details.participants.length; i++){
+          if (response.details.participants[i]['teamId'] == 100){
+            $scope.summonerInfo.match.team.team100.push(response.details.participants[i]);
+          } else {
+            $scope.summonerInfo.match.team.team200.push(response.details.participants[i]);
+          }
         }
-      }
-      $scope.summonerInfo.match.details = response.details
-      console.log($scope.summonerInfo.match);
-    })
+        $scope.summonerInfo.match.details = response.details
+        console.log($scope.summonerInfo.match);
+      })
+    }
   };
 
   $scope.staticData = {};
