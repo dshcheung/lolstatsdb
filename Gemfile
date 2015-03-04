@@ -7,7 +7,7 @@ gem 'pg', group: :production
 # Use sqlite3 as the database for Development
 gem 'sqlite3', group: :development
 # Bootstrap
-gem 'bootstrap-sass', '~> 3.3.0'
+# gem 'bootstrap-sass', '~> 3.3.0'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
 # Use Uglifier as compressor for JavaScript assets
@@ -57,3 +57,5 @@ gem 'angular-ui-bootstrap-rails'
 
 # noty-fications
 gem 'noty-rails'
+
+gem 'bower'

@@ -1,0 +1,120 @@
+@import "variables";
+profile-tab > div.row {
+  div.league-summary, div.stats-summary, div.champion-summary, div.position-summary {
+    box-sizing: border-box;
+    background: white;
+    border-radius: 10px;
+    margin: 15px;
+    border: 1px solid black;
+    text-align: center;
+    padding: 0;
+  }
+  div.league-summary {
+    width: calc((100%/12*8) - 30px);
+    div.row {
+      width: 100%;
+      margin: 0;
+      div.col-xs-4 {
+        width: 33%;
+        div.league-info {
+          img {
+            width: 100%;
+          }
+          div {
+            height: 80px;
+          }
+        }
+      }
+    }
+    div.col-xs-4:not(:last-child) {
+      border-right: 1px solid $border-color-1;
+    }
+    div.row:last-child {
+      div.col-xs-4 {
+        padding-bottom: 15px;
+      }
+    }
+  }
+  div.stats-summary {
+    overflow: auto;
+    width: calc((100%/12*4) - 30px);
+    height: 500px;
+    max-height: 371px;
+    div.row {
+      padding: 15px;
+      margin: 0;
+      text-align: left;
+      table > tbody > tr > td:last-child {
+        text-align: center;
+      }
+    }
+  }
+  div.champion-summary {
+    width: calc((100%/2) - 30px);
+    div.row {
+      width: calc(100% - 10px);
+      margin: 5px;
+      background: $background-theme-3;
+      color: white;
+      border-radius: 10px;
+      div.champ-info, div.champ-stats, div.champ-game {
+        display: inline-block;
+        padding: 10px 5px;
+      }
+      div.champ-info {
+        img {
+          width: 70px;
+          border-radius: 35px;
+        }
+      }
+      div.champ-stats{
+        position: relative;
+        margin: 12px 0;
+        div > span > img {
+          margin-right: -10px;
+          margin-bottom: -10px;
+        }
+      }
+      div.champ-game {
+        margin: 15px 0;
+        h4 {
+          color: $font-color-1;
+        }
+      }
+    }
+  }
+  div.position-summary {
+    width: calc((100%/2) - 30px);
+    div.row {
+      margin: 0;
+      width: 100%;
+      div.chart {
+       width: 100%;
+       height: 568px;
+       .ac-legend {
+        position:relative;
+        top: 200px;
+        left: 10px;
+       }
+      }
+    }
+  }
+  div.summary-title {
+    border-bottom: 1px solid $border-color-1;
+  }
+  @media screen and (max-width: 1199px){
+    div.stats-summary {
+      max-height: 327px;
+    }
+  }
+  @media screen and (max-width: 991px){
+    div.stats-summary {
+      max-height: 279px;
+    }
+  }
+  @media screen and (max-width: 767px){
+    div.league-summary, div.stats-summary, div.champion-summary, div.position-summary {
+      width: calc(100% - 30px);
+    }
+  }
+}

@@ -3,38 +3,30 @@ main-nav-bar > nav.navbar.navbar-default {
   background: $background-theme-2;
   border: none;
   border-radius: 0;
-  div.container-fluid {
-    div.navbar-header {
-      a {
-        padding: 0;
-        img {
-          margin: 8px 15px;
-          height: 34px;
-        }
-      }
+  div.container {
+    ul > li > a {
+      padding: 5px;
+      color: white;
+      font-family: $font-style-1;
+      font-size: 12px;
     }
-    div.collapse.navbar-collapse {
-      padding: 0 0 0 15px;
-      text-align: center;
-      overflow: hidden;
-      form {
-        margin: 8px 0;
+    ul.navbar-right{
+      position: relative;
+      right: 15px;
+      ul {
+        left: auto;
+        top: auto;
+        background-color: $background-theme-2;
         div {
-          display: inline;
-          background: white;
-          height: 34px;
-          padding: 9px 6px;
-          input {
-            border: none;
+          padding: 0;
+          margin: 0;
+          li > a {
+            color: white;
+          }
+          li > i {
+            color: green;
           }
         }
-        button {
-          margin: 0 0 0 5px;
-          border-radius: 0;
-        }
-      }
-      ul > li > a {
-        color: white;
       }
     }
   }

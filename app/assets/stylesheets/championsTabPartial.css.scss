@@ -1,0 +1,59 @@
+@import "variables";
+champions-tab > div.row {
+  width: 100%;
+  margin: 15px 0;
+  border-radius: 10px;
+  background: white;
+  border: 1px solid black;
+  div.ranked-stats {
+    padding: 0;
+    width: 100%;
+    div.ranked-title {
+      text-align: center;
+      border-bottom: 1px solid rgb(221,221,221);
+    }
+    div.row.ranked-heading {
+      width: calc(100% - 10px);
+      margin: 5px;
+      div:not(:first-child){
+        text-align: right;
+      }
+    }
+    div.row.ranked-body {
+      width: calc(100% - 10px);
+      margin: 5px;
+      border-radius: 10px;
+      background: $background-theme-3;
+      color: white;
+      div.champ-info {
+        img {
+          width: 36px;
+          border-radius: 18px;
+        }
+      }
+      div.champ:not(:first-child){
+        margin: 18px 0;
+        text-align: right;
+      }
+      div.champ-win-rate, div.champ-wins, div.champ-kills {
+        color: $font-color-1;
+      }
+      div.champ-losses, div.champ-deaths {
+        color: $font-color-2;
+      }
+      div.champ-total, div.champ-assists {
+        color: $font-color-3;
+      }
+      div.champ-minions, div.champ-gold, div.champ-info {
+        color: $font-color-4;
+      }
+    }
+  }
+  @media screen and (max-width: 767px){
+    div.ranked-stats {
+      div.ranked-body > div:not(:first-child), div.ranked-heading > div:not(:first-child) {
+        padding: 0 5px;
+      }
+    }
+  }
+}

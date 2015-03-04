@@ -1,0 +1,254 @@
+app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', function($scope, $routeParams, $http, $window){
+  // Summoner Information
+  // Set Initial Information
+  $scope.summonerInfo = {};
+  $scope.summonerInfo.searchData = {
+    'id': $routeParams.summonerId,
+    'region': $scope.$parent.selectedRegion.code
+  };
+  $scope.searchSummonerById = function () {
+    $http.post('/summoner/id', $scope.summonerInfo.searchData).success(function(response){
+      console.log(response);
+      $scope.summonerInfo.profileIconId = response.summoner.profileIconId;
+      $scope.summonerInfo.name = response.summoner.name;
+      $scope.summonerInfo.level = response.summoner.level;
+      $scope.summonerInfo.summonerId = response.summoner.summonerId;
+    }).error(function(response){
+      // noty error messages
+    })
+  };
+  $scope.summonerInfo.league = {};
+  $scope.queType = ["Solo 5x5", "Team 3x3", "Team 5x5"];
+  $scope.badgeDefault = "<%= asset_path('badgeDefault.png') %>";
+  $scope.getLeagueEntry = function (){
+    $http.post($scope.routesLink.leagueEntry, $scope.summonerInfo.searchData).success(function(response){
+      console.log(response);
+      $scope.summonerInfo.league.entry = response.league_entry;
+      $scope.summonerInfo.borderIcon = response.border_icon;
+      $scope.getLeagueAll();
+    }).error(function(response){
+      // noty error messages
+    })
+  };
+  $scope.getLeagueAll = function (){
+    var leagueEntry = $scope.summonerInfo.league.entry
+    $scope.leagueSearch = $scope.summonerInfo.searchData;
+    $scope.leagueSearch.queue = leagueEntry.solo5.queue;
+    $scope.leagueSearch.leagueName = leagueEntry.solo5.name;
+    $scope.leagueSearch.tier = leagueEntry.solo5.tier;
+    $scope.leagueSearch.division = leagueEntry.solo5.entries[0].division;
+
+    $http.post($scope.routesLink.leagueAll, $scope.leagueSearch).success(function(response) {
+        console.log(response);
+        $scope.summonerInfo.league.all = response;
+        $scope.getSummonersIcons(response.league_promo, response.league_normal);
+    }).error(function(response){
+      // noty error messages
+    })
+  };
+  $scope.changeLeagueAll = function (division){
+    $scope.changeLeagueSearch = $scope.leagueSearch;
+    switch (division){
+      case 1:
+        $scope.changeLeagueSearch.division = "I";
+        break;
+      case 2:
+        $scope.changeLeagueSearch.division = "II";
+        break;
+      case 3:
+        $scope.changeLeagueSearch.division = "III";
+        break;
+      case 4:
+        $scope.changeLeagueSearch.division = "IV";
+        break;
+      case 5:
+        $scope.changeLeagueSearch.division = "V";
+        break;
+    }
+    $http.post('/summoner/get_league_page', $scope.changeLeagueSearch).success(function(response){
+      console.log(response);
+      $scope.summonerInfo.league.all = response;
+      $scope.getSummonersIcons(response.league_promo, response.league_normal);
+    })
+  }
+  //paginate for league page stuff
+  $scope.leaguePage = {};
+  $scope.leaguePage.current = 1;
+  $scope.leaguePage.onPageChangeUp = function (){
+    if (this.current > 1){
+      this.current -= 1;
+    $scope.changeLeagueAll(this.current);
+    }
+    console.log(this.current);
+  };
+  $scope.leaguePage.onPageChangeDown = function (){
+    if (this.current < 5){
+      this.current += 1;
+    $scope.changeLeagueAll(this.current);
+    }
+    console.log(this.current);
+  };
+  $scope.getSummonersIcons = function (list1, list2){
+    $scope.iconSearch = {};
+    $scope.iconSearch.region = $scope.leagueSearch.region;
+    $scope.iconSearch.summonerList = [];
+    for (var index in list1) {
+      $scope.iconSearch.summonerList.push(list1[index].summonerId);
+    }
+    for (var index in list2) {
+      $scope.iconSearch.summonerList.push(list2[index].summonerId);
+    }
+    if ($scope.iconSearch.summonerList[0] != undefined){
+      $http.post('/summoner/get_icon_list', $scope.iconSearch).success(function(response){
+        console.log(response);
+        $scope.summonerInfo.league.all.summoners = response.summoners;
+      })
+    }
+  }
+
+  $scope.summonerInfo.stats_summary = {}
+  $scope.getStatsSummary = function (){
+    $http.post($scope.routesLink.statsSummary, $scope.summonerInfo.searchData).success(function(response){
+      console.log(response);
+      $scope.summonerInfo.stats_summary = response.stats_summary;
+    }).error(function(response){
+      // noty error messages
+    })
+  };
+  $scope.summonerInfo.stats_ranked = {}
+  $scope.getStatsRanked = function (){
+    $http.post($scope.routesLink.statsRanked, $scope.summonerInfo.searchData).success(function(response){
+      console.log(response);
+      $scope.summonerInfo.stats_ranked_top5 = response.top5;
+      $scope.summonerInfo.stats_ranked_all = response.all_ranked;
+    }).error(function(response){
+      // noty error messages
+    })
+  }
+  //table sorting stuff
+  $scope.predicate = "total_games";
+  $scope.reverse = true;
+
+  $scope.summonerInfo.matches = {};
+  $scope.summonerInfo.match = {};
+  $scope.getMatchHistory = function () {
+    $http.post($scope.routesLink.matchHistory, $scope.summonerInfo.searchData).success(function(response){
+      console.log(response);
+      $scope.summonerInfo.matches = response.match_history;
+      $scope.getMatchDetails(response.match_history[0].matchId, 0);
+      $scope.getPositionFrequency();
+    })
+  };
+  $scope.getPositionFrequency = function(){
+    $http.post($scope.routesLink.positionFrequency, $scope.summonerInfo.searchData).success(function(response){
+      console.log(response);
+      $scope.summonerInfo.positionFrequency = response.frequency;
+    })
+  }
+  $scope.matchDetailIndex = undefined;
+  $scope.getMatchDetails = function (matchId, index) {
+    if(index != $scope.matchDetailIndex){
+      $scope.matchDetailIndex = index;
+      $scope.selectedMatch = matchId;
+      $scope.searchMatchDetails = $scope.summonerInfo.searchData;
+      $scope.searchMatchDetails.matchId = matchId;
+      $http.post($scope.routesLink.matchDetail, $scope.searchMatchDetails).success(function(response){
+        console.log(response);
+        $scope.summonerInfo.match.team = {};
+        $scope.summonerInfo.match.team.team100 = [];
+        $scope.summonerInfo.match.team.team200 = [];
+        for (var i = 0; i < response.details.participants.length; i++){
+          if (response.details.participants[i]['teamId'] == 100){
+            $scope.summonerInfo.match.team.team100.push(response.details.participants[i]);
+          } else {
+            $scope.summonerInfo.match.team.team200.push(response.details.participants[i]);
+          }
+        }
+        $scope.summonerInfo.match.details = response.details
+        console.log($scope.summonerInfo.match);
+      })
+    }
+  };
+
+  $scope.staticData = {};
+  $scope.staticData.summonerSpells = {1: "Boost", 2: "Clairvoyance", 3: "Exhaust", 4: "Flash", 6: "Haste", 7: "Heal", 11: "Smite", 12: "Teleport", 13: "Mana", 14: "Dot", 17: "OdinGarrison", 21: "Barrier"};
+  $scope.getSummonerSpell = function(id){
+    return $scope.staticData.summonerSpells[id];
+  };
+
+  $scope.convertMsToDay = function (target){
+    var date = new Date();
+    timeNow = date.getTime();
+    var diff = timeNow - target;
+    return moment.unix(target/1000).fromNow();
+  };
+
+  $scope.routesLink = {};
+  $scope.setRoutesDefault = function (){
+    $scope.routesLink.leagueEntry = "/summoner/get_league_entry";
+    $scope.routesLink.leagueAll = "/summoner/get_league_all";
+    $scope.routesLink.statsSummary = "/summoner/get_stats_summary";
+    $scope.routesLink.statsRanked = "/summoner/get_stats_ranked";
+    $scope.routesLink.matchHistory = "/matches/get_match_histories";
+    $scope.routesLink.matchDetail = "/matches/get_match_details";
+    $scope.routesLink.positionFrequency = '/matches/get_position_frequency';
+  }
+  $scope.setRoutesRenew = function (){
+    $scope.routesLink.leagueEntry = "/summoner/renew_league_entry";
+    $scope.routesLink.leagueAll = "/summoner/renew_league_all";
+    $scope.routesLink.statsSummary = "/summoner/renew_stats_summary";
+    $scope.routesLink.statsRanked = "/summoner/renew_stats_ranked";
+    $scope.routesLink.matchHistory = "/matches/renew_match_histories";
+  }
+
+  $scope.$parent.renewAll = function (){
+    $scope.setRoutesRenew();
+    $scope.searchSummonerById();
+    $scope.getLeagueEntry();
+    $scope.getStatsSummary();
+    $scope.getStatsRanked();
+    $scope.matchDetailIndex = undefined;
+    $scope.getMatchHistory();
+    $scope.setRoutesDefault();
+  }
+
+  $scope.setRoutesDefault();
+  $scope.searchSummonerById();
+  $scope.getLeagueEntry();
+  $scope.getStatsSummary();
+  $scope.getStatsRanked();
+  $scope.getMatchHistory();
+
+  $scope.data = {
+    series: ['Sales', 'Income', 'Expense', 'Laptops', 'Keyboards'],
+    data: [{
+      x: "Laptops",
+      y: [100, 500, 0],
+      tooltip: "this is tooltip"
+    }, {
+      x: "Desktops",
+      y: [300, 100, 100]
+    }, {
+      x: "Mobiles",
+      y: [351]
+    }, {
+      x: "Tablets",
+      y: [54, 0, 879]
+    }]
+  };
+
+  $scope.profileTab = {};
+  $scope.profileTab.config = {
+    tooltips: true,
+    labels: false,
+    mouseover: function() {},
+    mouseout: function() {},
+    click: function() {},
+    legend: {
+      display: true,
+      position: 'right'
+    },
+    "innerRadius": "100",
+    colors: ["rgb(214, 65, 34)", "rgb(136, 68, 153)", "rgb(87, 152, 34)", "rgb(34, 126, 152)", "rgb(185, 154, 69)", "rgb(152, 75, 34)"]
+  };
+}])

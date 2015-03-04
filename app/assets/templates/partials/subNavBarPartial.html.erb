@@ -1,0 +1,20 @@
+<nav class="navbar navbar-default">
+  <div class="container">
+    <a class="navbar-brand" href="/#/"><img src="<%=  asset_path('logo.png') %>" alt="logo"></a>
+    <form class="form-inline navbar-right" ng-submit="searchSummoner()">
+      <div class="form-group">
+        <input type="text" placeholder="Summoner Name" ng-model="summoner.searchName">
+        <button type="button" data-toggle="dropdown">
+          {{selectedRegion.code}}
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <div ng-repeat="region in regions" class="row">
+            <li class="col-xs-8"><a href="" ng-click="changeRegion(this)">{{region.code}}</a></li>
+            <li class="col-xs-4"><i class="fa fa-check"></i></li>
+          </div>
+        </ul>
+      </div>
+      <button class="btn btn-primary">Search</button>
+    </form>
+  </div>
+</nav>

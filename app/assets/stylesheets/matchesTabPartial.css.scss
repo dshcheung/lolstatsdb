@@ -1,0 +1,158 @@
+@import "variables";
+matches-tab > div.row {
+  width: 100%;
+  margin: 15px 0;
+  border-radius: 10px;
+  background: white;
+  border: 1px solid black;
+  div.matches-table {
+    div.matches-title {
+      text-align: center;
+      border-bottom: 1px solid rgb(221,221,221);
+    }
+    div.matches-body {
+      margin: 15px;
+      padding: 0;
+      color: white;
+      div.matches-history {
+        margin: 0;
+        width: 240px;
+        padding: 0;
+        div.history-links {
+          button {
+            background-color: rgb(29, 45, 65);
+            border: 1px solid black;
+            padding: 0;
+            text-align: center;
+            width: 100%;
+            div.champion-info {
+              float: left;
+              margin: 15px 10px;
+              img {
+                width: 50px;
+                border-radius: 5px;
+              }
+            }
+            div.match-info {
+              margin: 0;
+              div.row {
+                margin: 0;
+              }
+            }
+          }
+          button:first-child {
+            border-top-left-radius: 10px;
+          }
+          button:last-child {
+            border-bottom-left-radius: 10px;
+          }
+          button.selected {
+            background-color: rgb(9,72,128);
+          }
+          button > div {
+            display: inline-block;
+          }
+        }
+      }
+      div.matches-details {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        width: calc(100% - 270px);
+        height: 820px;
+        border: 1px solid black;
+        margin: 0;
+        padding: 0;
+        background-color: rgb(29, 45, 65);
+        div.details-table {
+          text-align: center;  
+          table.table.table-heading {
+            margin: 0;
+            background: rgba(0,0,0,0);
+            thead {
+              th {
+                text-align: center;
+              }
+            }
+          }
+          div.table-body {
+            div.result-title {
+              background-color: rgb(18,27,36);
+              height: 50px;
+              label {
+                margin: 15px;
+              }
+              label.result-winner {
+                color: rgb(106, 171, 0);
+              }
+              label.result-loser {
+                color: rgb(205, 29, 29);
+              }
+            }
+            table {
+              margin: 0;
+              tbody {
+                tr:last-child {
+                  td {
+                    border-bottom: 1px solid rgb(221, 221, 221);
+                  }
+                }
+                tr {
+                  td.summoner-champ {
+                    div.champ-info {
+                      float: left;
+                      display: inline-flex;
+                      img {
+                        height: 40px;
+                        width: 40px;
+                      }
+                      div.summoner-spells {
+                        display: inline-block;
+                        img {
+                          display: block;
+                          width: 20px;
+                          height: 20px;
+                        }
+                      }
+                      a {
+                        height: 20px;
+                        margin: 10px 5px;
+                        color: rgb(255, 219, 76);
+                      }
+                    }
+                  }
+                  td.summoner-kda, td.summoner-cs, td.summoner-wards, td.summoner-gold {
+                    div {
+                      margin: 10px 0;
+                    }
+                  }
+                  td.summoner-wards {
+                    div > span:first-child {
+                      color: rgb(39, 174, 96);
+                    }
+                    div > span:last-child {
+                      color: rgb(211, 84, 0);
+                    }
+                  }
+                  td.summoner-gold {
+                    color: gold;
+                  }
+                  td.summoner-items {
+                    div {
+                      display: inherit;
+                      width:40px;
+                      height:40px;
+                      img {
+                        width:40px;
+                        height:40px;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

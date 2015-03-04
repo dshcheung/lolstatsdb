@@ -1,0 +1,58 @@
+@import "variables";
+sub-nav-bar > nav.navbar.navbar-default {
+  background: $background-theme-1;
+  border-width: 0 0 1px 0;
+  border-style: solid;
+  border-color: black;
+  border-radius: 0;
+  margin: -20px 0 0 0;
+  div.container {
+    a {
+      padding: 0 5px;
+      img {
+        margin: 8px 15px;
+        height: 34px;
+      }
+    }
+    form {
+      margin: 8px 0;
+      padding: 0 5px;
+      div {
+        display: inline;
+        background: white;
+        height: 34px;
+        padding: 9px 6px;
+        input {
+          border: none;
+          width: 120px;
+        }
+        button {
+          background-color: $background-theme-2;
+          color: white;
+          border: 1px;
+          font-size: 12px;
+          position:relative;
+          bottom: 2px;
+        }
+        ul {
+          right: auto;
+          background-color: $background-theme-2;
+          div {
+            padding: 0;
+            margin: 0;
+            li > a {
+              color: white;
+            }
+            li > i {
+              color: green;
+            }
+          }
+        }
+      }
+      button {
+        margin: 0 0 0 5px;
+        border-radius: 0;
+      }
+    }
+  }
+}

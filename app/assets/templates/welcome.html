@@ -1,15 +1,24 @@
-<main-nav-bar></main-nav-bar>
+<div class="welcome-page">
+  <main-nav-bar></main-nav-bar>
 
-<main class="container-fluid welcome-page">
-  <section class="row">
-    <div class="banner-img"></div>
-    <form class="form-inline" ng-submit="searchSummoner()">
-      <div class="form-group">
-        <input type="text" placeholder="Summoner Name" ng-model="summoner">
-        <select ng-selected="6" ng-model="selectedRegion" ng-options="region.code for region in regions">
-        </select>
-      </div>
-      <button class="btn btn-primary">Search</button>
-    </form>
-  </section>
-</main>
+  <main class="container">
+    <section class="row">
+      <div class="banner-img"></div>
+      <form class="form-inline" ng-submit="searchSummoner()">
+        <div class="form-group">
+          <input type="text" placeholder="Summoner Name" ng-model="summoner.searchName">
+          <button type="button" data-toggle="dropdown">
+            {{selectedRegion.code}}
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <div ng-repeat="region in regions" class="row">
+              <li class="col-xs-8"><a href="" ng-click="changeRegion(this)">{{region.code}}</a></li>
+              <li class="col-xs-4"><i class="fa fa-check"></i></li>
+            </div>
+          </ul>
+        </div>
+        <button class="btn btn-primary">Search</button>
+      </form>
+    </section>
+  </main>
+</div>

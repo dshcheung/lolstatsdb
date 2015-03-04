@@ -1,0 +1,11 @@
+app.filter('split', function() {
+    return function(input, splitChar, splitIndex) {
+        return input.split(splitChar)[splitIndex];
+    }
+});
+
+app.filter('replace', function(){
+  return function(input, replaceTarget, replaceWith) {
+    return input.split(replaceTarget).join(replaceWith)
+  }
+})

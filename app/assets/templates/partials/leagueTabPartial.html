@@ -1,0 +1,86 @@
+<div class="row">
+  <div class="league-table">
+    <div class="league-title">
+      <div class="league-badge"><img src="{{summonerInfo.league.all.badge_icon}}"></div>
+      <div class="page-icon">
+        <div><a ng-click="leaguePage.onPageChangeUp()"><i class="fa fa-chevron-up"></i></a></div>
+        <div><a ng-click="leaguePage.onPageChangeDown()"><i class="fa fa-chevron-down"></i></a></div>
+      </div>
+      <div class="league-info">
+        <div><label>{{leagueSearch.leagueName}}</label></div>
+        <div><label>{{leagueSearch.tier}}, Division {{leagueSearch.division}}</label></div>
+      </div>
+    </div>
+    <div class="league-promo">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Summoner</th>
+            <th>Emblems</th>
+            <th>Wins</th>
+            <th>Promo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="summoner in summonerInfo.league.all.league_promo track by $index">
+            <td>{{$index + 1}}</td>
+            <td>
+              <div>
+                <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/profileicon/{{summonerInfo.league.all.summoners[summoner.summonerId].profileIconId}}.png">
+              </div>
+              <div>
+                <a href="/#/summoner/{{summoner.region}}/{{summoner.summonerId}}">{{summoner.entry.playerOrTeamName}}</a>
+              </div>
+            </td>
+            <td>
+              <i class="fa fa-trophy" tooltip-html-unsafe="<b>Veteran</b><br>Played 100 or more games in this league." ng-class="{'icon-disabled': !summoner.entry.isVeteran}"></i>
+              <i class="fa fa-fire" tooltip-html-unsafe= "<b>Hot Streak</b><br> Won 3 or more games in a row" ng-class="{'icon-disabled': !summoner.entry.isHotStreak}"></i>
+              <i class="fa fa-star" tooltip-html-unsafe="<b>Recruit</b><br>Recently joined this league" ng-class="{'icon-disabled': !summoner.entry.isFreshBlood}"></i>
+              <i class="fa fa-ellipsis-h" tooltip-html-unsafe= "<b>Inactive User</b>" ng-class="{'icon-disabled': !summoner.entry.isInactive}"></i>
+            </td>
+            <td>{{summoner.entry.wins}}</td>
+            <td>
+              <i class="fa" ng-repeat="game in summoner.entry.miniSeries.progress.split('') track by $index" ng-class="{'fa-check': game == 'W', 'fa-times': game=='L', 'fa-minus': game=='N'}"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="league-normal">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Summoner</th>
+            <th>Emblems</th>
+            <th>Wins</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="summoner in summonerInfo.league.all.league_normal track by $index">
+            <td>{{$index + summonerInfo.league.all.league_promo.length + 1}}</td>
+            <td>
+              <div>
+                <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/profileicon/{{summonerInfo.league.all.summoners[summoner.summonerId].profileIconId}}.png">
+              </div>
+              <div>
+                <a href="/#/summoner/{{summoner.region}}/{{summoner.summonerId}}">{{summoner.entry.playerOrTeamName}}</a>
+              </div>
+            </td>
+            <td>
+              <i class="fa fa-trophy" tooltip-html-unsafe="<b>Veteran</b><br>Played 100 or more games in this league." ng-class="{'icon-disabled': !summoner.entry.isVeteran}"></i>
+              <i class="fa fa-fire" tooltip-html-unsafe= "<b>Hot Streak</b><br> Won 3 or more games in a row" ng-class="{'icon-disabled': !summoner.entry.isHotStreak}"></i>
+              <i class="fa fa-star" tooltip-html-unsafe="<b>Recruit</b><br>Recently joined this league" ng-class="{'icon-disabled': !summoner.entry.isFreshBlood}"></i>
+              <i class="fa fa-ellipsis-h" tooltip-html-unsafe= "<b>Inactive User</b>" ng-class="{'icon-disabled': !summoner.entry.isInactive}"></i>
+            </td>
+            <td>{{summoner.entry.wins}}</td>
+            <td>{{summoner.entry.leaguePoints}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

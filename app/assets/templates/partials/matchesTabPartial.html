@@ -1,0 +1,108 @@
+<div class="row">
+  <div class="matches-table">
+    <div class="matches-title">
+      <label>Match History</label>
+    </div>
+    <div class="matches-body col-xs-12">
+      <div class="matches-history col-xs-3">
+        <div class="history-links">
+          <button ng-repeat="match in summonerInfo.matches track by $index" ng-class="{'selected': match.matchId == selectedMatch}" ng-click="getMatchDetails(match.matchId, $index)">
+            <div class="champion-info">
+              <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{match.champion_key}}.png">
+            </div>
+            <div class="match-info">
+              <div class="row">
+                <label>{{match.queue | split:'_':0}}</label>
+              </div>
+              <div class="row">
+                <div class="match-winner">
+                  <label ng-show="match.winner =='true'">Victory</label>
+                  <label ng-show="match.winner =='false'">Defeat</label>
+                </div>
+              </div>
+              <div class="row">
+                <label>{{convertMsToDay(match.match_creation)}}</label>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div class="matches-details col-xs-8">
+        <div class="details-table">
+          <table class="table table-heading">
+            <thead>
+              <th class="col-xs-3">
+                <label>Summoner</label>
+              </th>
+              <th class="col-xs-2">
+                <label>K/D/A</label>
+              </th>
+              <th class="col-xs-1">
+                <label>CS</label>
+              </th>
+              <th class="col-xs-1">
+                <label>Wards</label>
+              </th>
+              <th class="col-xs-1">
+                <label>Gold</label>
+              </th>
+              <th class="col-xs-4">
+                <label>Items</label>
+              </th>
+            </thead>
+          </table>
+
+          <div class="table-body" ng-repeat="team in summonerInfo.match.team track by $index">
+            <div class="result-title">
+              <label class="result-winner" ng-show="team[0].stats.winner">Winning Team</label>
+              <label class="result-loser" ng-show="!team[0].stats.winner">Losing Team</label>
+            </div>
+            <table class="table">
+              <tbody>
+                <tr ng-repeat="summoner in team">
+                  <td class="summoner-champ col-xs-3">
+                    <div class="champ-info">
+                      <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{summoner.champion_name_key}}.png">
+                      <div class="summoner-spells">
+                        <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/spell/Summoner{{getSummonerSpell(summoner.spell1Id)}}.png">
+                        <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/spell/Summoner{{getSummonerSpell(summoner.spell2Id)}}.png">
+                      </div>
+                      <a href="/#/summoner/{{summonerInfo.match.details.region}}/{{summonerInfo.match.details.participant_identities[summoner.participantId - 1].player.summonerId}}">{{summonerInfo.match.details.participant_identities[summoner.participantId - 1].player.summonerName}}</a>
+                    </div>
+                  </td>
+                  <td class="summoner-kda col-xs-2">
+                    <div>{{summoner.stats.kills}}/{{summoner.stats.deaths}}/{{summoner.stats.assists}}</div>
+                  </td>
+                  <td class="summoner-cs col-xs-1">
+                    <div>
+                      {{summoner.stats.minionsKilled}}
+                    </div>
+                  </td>
+                  <td class="summoner-wards col-xs-1">
+                    <div>
+                      <span>{{summoner.stats.sightWardsBoughtInGame}}</span>/<span>{{summoner.stats.visionWardsBoughtInGame}}</span>
+                    </div>
+                  </td>
+                  <td class="summoner-gold col-xs-1">
+                    <div>
+                      {{summoner.stats.goldEarned/1000 | number:1}}K
+                    </div>
+                  </td>
+                  <td class="summoner-items col-xs-4">
+                    <div><img ng-show="summoner.stats.item0 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item0}}.png "></div>
+                    <div><img ng-show="summoner.stats.item1 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item1}}.png "></div>
+                    <div><img ng-show="summoner.stats.item2 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item2}}.png "></div>
+                    <div><img ng-show="summoner.stats.item3 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item3}}.png "></div>
+                    <div><img ng-show="summoner.stats.item4 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item4}}.png "></div>
+                    <div><img ng-show="summoner.stats.item5 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item5}}.png "></div>
+                    <div><img ng-show="summoner.stats.item6 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item6}}.png "></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

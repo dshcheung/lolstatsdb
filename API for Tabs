@@ -1,0 +1,21 @@
+Profile page
+#/api/lol/{region}/v2.5/league/by-summoner/{summonerIds}/entry (current ranked tier)
+#/api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/summary (KHA Minion stats)
+#/api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/ranked (ranked stats)
+/api/lol/{region}/v2.2/matchhistory/{summonerId} (summary index)
+
+Runes
+/api/lol/{region}/v1.4/summoner/{summonerIds}/runes
+
+Masteries
+/api/lol/{region}/v1.4/summoner/{summonerIds}/masteries
+
+Matches
+/api/lol/{region}/v2.2/matchhistory/{summonerId} (summary index) *
+/api/lol/{region}/v2.2/match/{matchId} (detailed)
+
+Champtions
+#/api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/ranked *
+
+League
+#/api/lol/{region}/v2.5/league/by-summoner/{summonerIds}

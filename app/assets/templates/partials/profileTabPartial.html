@@ -1,0 +1,103 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-8 league-summary">
+    <div class="summary-title" >
+      <label>Rank Summary</label>
+    </div>
+    <div class="row">
+      <div class="col-xs-4" ng-repeat="type in queType">
+        <label>{{type}}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4" ng-repeat="type in summonerInfo.league.entry">
+        <div ng-show="type != null" class="league-info">
+          <img src="{{type.badge_icon}}" alt="">
+          <div>
+            <p>{{type.tier}} {{type.entries[0].division}}</p>
+            <p>LP: {{type.entries[0].leaguePoints}}</p>
+            <p>Wins: {{type.entries[0].wins}}</p>
+          </div>
+        </div>
+        <div ng-show="type == null" class="league-info">
+          <img src="{{badgeDefault}}" alt="">
+          <div>
+            <p>UNRANKED</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-4 stats-summary">
+    <div class="summary-title">
+      <label>General Stats</label>
+    </div>
+    <div class="row">
+      <table class="table table-bordered table-striped" ng-repeat="type in summonerInfo.stats_summary" ng-show="type.stats.aggregatedStats.totalMinionKills != null">
+        <caption>{{type.title}}</caption>
+        <tbody>
+          <tr>
+            <td class="col-xs-6">Wins</td>
+            <td class="col-xs-6">{{type.stats.wins}}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-6">Kills</td>
+            <td class="col-xs-6">{{type.stats.aggregatedStats.totalChampionKills}}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-6">Assists</td>
+            <td class="col-xs-6">{{type.stats.aggregatedStats.totalAssists}}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-6">Minion Kills</td>
+            <td class="col-xs-6">{{type.stats.aggregatedStats.totalMinionKills}}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-6">Neutral Minion Kill</td>
+            <td class="col-xs-6">{{type.stats.aggregatedStats.totalNeutralMinionsKilled}}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-6">Turrent Destroyed</td>
+            <td class="col-xs-6">{{type.stats.aggregatedStats.totalTurretsKilled}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12 col-sm-6 champion-summary">
+    <div class="summary-title">
+      <label>Top 5 Played Champions</label>
+    </div>    
+    <div class="row" ng-repeat="champ in summonerInfo.stats_ranked_top5 track by $index">
+      <div class="champ-info pull-left">
+        <div class="info-image"><img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{champ.champion_name_key}}.png "></div>
+        <div class="info-name">{{champ.champion_name}}</div>
+      </div>
+      <div class="champ-stats">
+        <div class="stat-kda"><span><img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/ui/score.png"></span>{{champ.average_kills}} / {{champ.average_deaths}} / {{champ.average_assists}} KDA</div>
+        <div class="stat-cs"><span><img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/ui/minion.png"></span>{{champ.average_minions}} CS</div>
+        <div class="stat-cs"><span><img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/ui/gold.png"></span>{{champ.average_gold}} Gold</div>
+      </div>
+      <div class="champ-game pull-right">
+        <div class="game-played">{{champ.total_games}} Played</div>
+        <div class="game-rate"><h4>{{(champ.win_rate * 100) | number:2}}%</h4></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-6 position-summary">
+    <div class="summary-title">
+      <label>Recent Position Frequency</label>
+    </div>
+    <div class="row">
+      <div style="width: 100%;height: 580px;"
+        data-ac-chart="'pie'" 
+        data-ac-data="summonerInfo.positionFrequency" 
+        data-ac-config="profileTab.config" 
+        class="chart">
+      </div>
+    </div>
+  </div>
+</div>

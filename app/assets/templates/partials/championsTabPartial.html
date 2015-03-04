@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="ranked-stats">
+    <div class="ranked-title">
+      <label>Rank Champion Stats</label>
+    </div>
+    <div class="ranked-heading row">
+      <div class="col-xs-2"><a ng-click="predicate = 'champion_name'; reverse=!reverse"><label>Champ</label></a></div>
+      <div class="hidden-xs col-sm-1"><a ng-click="predicate = 'total_wins'; reverse=!reverse"><label>Wins</label></a></div>
+      <div class="hidden-xs col-sm-1"><a ng-click="predicate = 'total_losses'; reverse=!reverse"><label>Losses</label></a></div>
+      <div class="col-xs-2 col-sm-1"><a ng-click="predicate = 'total_games'; reverse=!reverse"><label>Total</label></a></div>
+      <div class="col-xs-2 col-sm-1"><a ng-click="predicate = 'win_rate'; reverse=!reverse"><label>Win%</label></a></div>
+      <div class="col-xs-1"><a ng-click="predicate = 'average_kills'; reverse=!reverse"><label>K</label></a></div>
+      <div class="col-xs-1"><a ng-click="predicate = 'average_deaths'; reverse=!reverse"><label>D</label></a></div>
+      <div class="col-xs-1"><a ng-click="predicate = 'average_assists'; reverse=!reverse"><label>A</label></a></div>
+      <div class="col-xs-1"><a ng-click="predicate = 'average_minions'; reverse=!reverse"><label>CS</label></a></div>
+      <div class="col-xs-2"><a ng-click="predicate = 'average_gold'; reverse=!reverse"><label>Gold</label></a></div>
+    </div>
+    <div class="ranked-body row" ng-repeat="champ in summonerInfo.stats_ranked_all | orderBy:predicate:reverse">
+      <div class="champ champ-info col-xs-2">
+        <div>
+          <div class="info-image"><img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{champ.champion_name_key}}.png "></div>
+          <div class="info-name">{{champ.champion_name}}</div>
+        </div>
+      </div>
+      <div class="champ champ-wins hidden-xs col-sm-1">{{champ.total_wins}}</div>
+      <div class="champ champ-losses hidden-xs col-sm-1">{{champ.total_losses}}</div>
+      <div class="champ champ-total col-xs-2 col-sm-1">{{champ.total_games}}</div>
+      <div class="champ champ-win-rate col-xs-2 col-sm-1">{{(champ.win_rate * 100) | number:2}}%</div>
+      <div class="champ champ-kills col-xs-1">{{champ.average_kills}}</div>
+      <div class="champ champ-deaths col-xs-1">{{champ.average_deaths}}</div>
+      <div class="champ champ-assists col-xs-1">{{champ.average_assists}}</div>
+      <div class="champ champ-minions col-xs-1">{{champ.average_minions}}</div>
+      <div class="champ champ-gold col-xs-2">{{champ.average_gold | number}}</div>
+    </div>
+  </div>
+</div>
