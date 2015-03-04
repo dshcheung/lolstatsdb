@@ -307,7 +307,7 @@ class SummonersController < ApplicationController
   end
 
   def get_stats_ranked
-    summoner = Summoner.find_by(summonerId: params['id'].to_i, region: params['region'].to_s)
+    summoner = Summoner.find_by(summonerId: params['id'], region: params['region'])
     if summoner.stats_rankeds.empty?
       update_stats_ranked(params['id'], params['region'], summoner)
     end
@@ -319,7 +319,9 @@ class SummonersController < ApplicationController
   def renew_stats_ranked
     summoner = Summoner.find_by(summonerId: params['id'], region: params['region'])
     update_stats_ranked(params['id'], params['region'], summoner)
-    render json: {stats_ranked: summoner[:stats_ranked]}
+    top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
+    all_ranked = summoner.stats_rankeds
+    render json: {top5: top5, all_ranked: all_ranked}
   end
 
   def update_stats_ranked(id, region, summoner)

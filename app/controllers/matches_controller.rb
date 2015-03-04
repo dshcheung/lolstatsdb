@@ -10,7 +10,7 @@ class MatchesController < ApplicationController
 
   def renew_match_histories
     update_match_histories(params['id'], params['region'])
-    matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(:match_creation).limit(10).reverse
+    matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
     render json: {match_history: matches}
   end
 
