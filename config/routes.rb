@@ -23,4 +23,6 @@ Rails.application.routes.draw do
   post '/matches/renew_match_histories', to: 'matches#renew_match_histories'
 
   post '/matches/get_match_details', to: 'matches#get_match_details'
+
+  post '/matches/get_position_frequency', to: 'matches#get_position_frequency'
 end

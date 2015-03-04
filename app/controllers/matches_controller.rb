@@ -115,4 +115,33 @@ class MatchesController < ApplicationController
       end
     end
   end
+
+  def get_position_frequency
+    matches = MatchHistory.where(summonerId: params["id"], region: params["region"]).order(match_creation: :desc).limit(10)
+    frequency = { data: [{x: "Top", y: [0]}, {x: "Middle", y: [0]}, {x: "Jungle", y: [0]}, {x: "Support", y: [0]}, {x: "ADC", y: [0]}]}
+
+    adc = {"Ashe"=> true, "Caitlyn"=> true, "Corki"=> true, "Draven"=> true, "Ezreal"=> true, "Graves"=> true, "Jinx"=> true, "Kalista"=> true, "Kog'Maw"=> true, "Lucian"=> true, "Miss Fortune"=> true, "Quinn"=> true, "Sivir"=> true, "Teemo"=> true, "Tristana"=> true, "Twitch"=> true, "Urgot"=> true, "Varus"=> true, "Vayne"=> true}
+
+    matches.each do |match|
+      case match.role
+      when "TOP"
+        frequency[:data][0][:y][0] += 1
+      when "MIDDLE"
+        frequency[:data][1][:y][0] += 1
+      when "NONE"
+        frequency[:data][2][:y][0] += 1
+      when "DUO_SUPPORT"
+        frequency[:data][3][:y][0] += 1
+      when "DUO_CARRY"
+        frequency[:data][4][:y][0] += 1
+      when "DUO"
+        if adc[match.champion_name].nil?
+          frequency[:data][3][:y][0] += 1
+        else
+          frequency[:data][4][:y][0] += 1
+        end
+      end
+    end
+    render json: {frequency: frequency}
+  end
 end

@@ -57,3 +57,5 @@ gem 'angular-ui-bootstrap-rails'
 
 # noty-fications
 gem 'noty-rails'
+
+gem 'bower'
