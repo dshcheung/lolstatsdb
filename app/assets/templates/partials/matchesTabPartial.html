@@ -8,7 +8,7 @@
         <div class="history-links">
           <button ng-repeat="match in summonerInfo.matches track by $index" ng-class="{'selected': match.matchId == selectedMatch}" ng-click="getMatchDetails(match.matchId)">
             <div class="champion-info">
-              <img src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{match.champion_key}}.png">
+              <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{match.champion_key}}.png">
             </div>
             <div class="match-info">
               <div class="row">
@@ -62,10 +62,10 @@
                 <tr ng-repeat="summoner in team">
                   <td class="summoner-champ col-xs-3">
                     <div class="champ-info">
-                      <img src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{summoner.champion_name_key}}.png">
+                      <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{summoner.champion_name_key}}.png">
                       <div class="summoner-spells">
-                        <img src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/spell/Summoner{{getSummonerSpell(summoner.spell1Id)}}.png">
-                        <img src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/spell/Summoner{{getSummonerSpell(summoner.spell2Id)}}.png">
+                        <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/spell/Summoner{{getSummonerSpell(summoner.spell1Id)}}.png">
+                        <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/spell/Summoner{{getSummonerSpell(summoner.spell2Id)}}.png">
                       </div>
                       <a href="/#/summoner/{{summonerInfo.match.details.region}}/{{summonerInfo.match.details.participant_identities[summoner.participantId - 1].player.summonerId}}">{{summonerInfo.match.details.participant_identities[summoner.participantId - 1].player.summonerName}}</a>
                     </div>
@@ -89,13 +89,13 @@
                     </div>
                   </td>
                   <td class="summoner-items col-xs-4">
-                    <div><img ng-show="summoner.stats.item0 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item0}}.png "></div>
-                    <div><img ng-show="summoner.stats.item1 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item1}}.png "></div>
-                    <div><img ng-show="summoner.stats.item2 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item2}}.png "></div>
-                    <div><img ng-show="summoner.stats.item3 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item3}}.png "></div>
-                    <div><img ng-show="summoner.stats.item4 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item4}}.png "></div>
-                    <div><img ng-show="summoner.stats.item5 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item5}}.png "></div>
-                    <div><img ng-show="summoner.stats.item6 != 0" src="http://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item6}}.png "></div>
+                    <div><img ng-show="summoner.stats.item0 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item0}}.png "></div>
+                    <div><img ng-show="summoner.stats.item1 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item1}}.png "></div>
+                    <div><img ng-show="summoner.stats.item2 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item2}}.png "></div>
+                    <div><img ng-show="summoner.stats.item3 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item3}}.png "></div>
+                    <div><img ng-show="summoner.stats.item4 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item4}}.png "></div>
+                    <div><img ng-show="summoner.stats.item5 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item5}}.png "></div>
+                    <div><img ng-show="summoner.stats.item6 != 0" src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/item/{{summoner.stats.item6}}.png "></div>
                   </td>
                 </tr>
               </tbody>
