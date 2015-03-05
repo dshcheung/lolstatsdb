@@ -2,16 +2,27 @@ class MatchesController < ApplicationController
   def get_match_histories
     matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
     if matches.empty?
-      update_match_histories(params['id'], params['region'])
+      if update_match_histories(params['id'], params['region'])
+        matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
+        render json: {match_history: matches}
+      else
+        matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
+        render json: {match_history: matches}, status: 400
+      end
+    else
+      matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
+      render json: {match_history: matches}
     end
-    matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
-    render json: {match_history: matches}
   end
 
   def renew_match_histories
-    update_match_histories(params['id'], params['region'])
-    matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
-    render json: {match_history: matches}
+    if update_match_histories(params['id'], params['region'])
+      matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
+      render json: {match_history: matches}
+    else
+      matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
+      render json: {match_history: matches}, status: 400
+    end
   end
 
   def update_match_histories(id, region)
@@ -44,12 +55,13 @@ class MatchesController < ApplicationController
                               lane: match['participants'][0]['timeline']['lane'])
         end
       end
+      return true
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
       when 1
         retry
       when 2
-        return e
+        return false
       end
     end
   end
@@ -57,10 +69,17 @@ class MatchesController < ApplicationController
   def get_match_details
     match = MatchDetail.find_by(matchId: params['matchId'], region: params['region'])
     if match.nil?
-      update_match_details(params['matchId'], params['region'])
+      if update_match_details(params['matchId'], params['region'])
+        match = MatchDetail.find_by(matchId: params['matchId'], region: params['region'])
+        render json: {details: match}
+      else
+        match = MatchDetail.find_by(matchId: params['matchId'], region: params['region'])
+        render json: {details: match}, status: 400
+      end
+    else
+      match = MatchDetail.find_by(matchId: params['matchId'], region: params['region'])
+      render json: {details: match}
     end
-    match = MatchDetail.find_by(matchId: params['matchId'], region: params['region'])
-    render json: {details: match}
   end
 
   def update_match_details(matchId, region)
@@ -106,12 +125,13 @@ class MatchesController < ApplicationController
                            participants: participants,
                            participant_identities: response['participantIdentities'])
       end
+      return true
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
       when 1
         retry
       when 2
-        return e
+        return false
       end
     end
   end
@@ -143,5 +163,9 @@ class MatchesController < ApplicationController
       end
     end
     render json: {frequency: frequency}
+  end
+
+  def rescue_me(e)
+    return 2
   end
 end

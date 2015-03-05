@@ -11,9 +11,7 @@ class SummonersController < ApplicationController
       name_no_space = params['summoner'].gsub(' ', "")
       url = "https://#{params['region']}.api.pvp.net/api/lol/#{params['region']}/v1.4/summoner/by-name/#{name_utf.downcase}?api_key=#{ENV['API_KEY']}"
       response = JSON.parse(open(url).read)
-      if response.empty?
-        render json: {success: true, summoner: nil}, status: 200
-      else
+      if not response.empty?
         response = response["#{name_no_space.downcase}"]
         summoner = Summoner.find_by(summonerId: response['id'])
         if summoner.nil?
@@ -21,8 +19,8 @@ class SummonersController < ApplicationController
         else
           summoner.update(name: response['name'], profileIconId: response['profileIconId'], level: response['summonerLevel'], summonerId: response['id'], region: params['region'])
         end
-        render json: {success: true, summoner: summoner}, status: 200
       end
+      render json: {success: true, summoner: summoner}, status: 200
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
       when 1
@@ -41,9 +39,7 @@ class SummonersController < ApplicationController
     begin
       url = "https://#{params['region']}.api.pvp.net/api/lol/#{params['region']}/v1.4/summoner/#{params['id']}?api_key=#{ENV['API_KEY']}"
       response = JSON.parse(open(url).read)
-      if response.empty?
-        render json: {success: true, summoner: nil}, status: 200
-      else
+      if not response.empty?
         response = response["#{params['id']}"]
         summoner = Summoner.find_by(summonerId: params['id'])
         if summoner.nil?
@@ -51,8 +47,8 @@ class SummonersController < ApplicationController
         else 
           summoner.update(name: response['name'], profileIconId: response['profileIconId'], level: response['summonerLevel'], summonerId: response['id'], region: params['region'])
         end
-        render json: {success: true, summoner: summoner}, status: 200
       end
+      render json: {success: true, summoner: summoner}, status: 200
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
       when 1
@@ -66,14 +62,22 @@ class SummonersController < ApplicationController
   def get_league_all
     summoner_existance = League.find_by(region: params['region'], queue: params['queue'], name: params['leagueName'], tier: params['tier'], division: params['division'], summonerId: params['id'])
     if summoner_existance.nil?
-      update_league_all(params['region'], params['id'])
+      if update_league_all(params['region'], params['id'])
+        render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName'])
+      else
+        render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName']), status: 400
+      end
+    else
+      render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName'])
     end
-    render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName'])
   end
 
   def renew_league_all
-    update_league_all(params['region'], params['id'])
-    render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName'])
+    if update_league_all(params['region'], params['id'])
+      render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName'])
+    else
+      render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName']), status: 400
+    end
   end
 
   def get_league_page
@@ -128,12 +132,13 @@ class SummonersController < ApplicationController
           end
         end
       end
+      return true
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
       when 1
         retry
       when 2
-        return e
+        return false
       end
     end
   end
@@ -168,7 +173,7 @@ class SummonersController < ApplicationController
       when 1
         retry
       when 2
-        return render json: {message: "too many requests!"}
+        return render json: {message: "too many requests!"}, status: 400
       end
     end
   end
@@ -176,15 +181,23 @@ class SummonersController < ApplicationController
   def get_league_entry
     summoner = Summoner.find_by(summonerId: params['id'].to_i, region: params['region'].to_s)
     if summoner[:league].nil?
-      update_league_entry(params['id'], params['region'], summoner)
+      if update_league_entry(params['id'], params['region'], summoner)
+        render json: {league_entry: summoner[:league], border_icon: summoner[:border_icon]}
+      else
+        render json: {league_entry: summoner[:league], border_icon: summoner[:border_icon]}, status: 400
+      end
+    else
+      render json: {league_entry: summoner[:league], border_icon: summoner[:border_icon]}
     end
-    render json: {league_entry: summoner[:league], border_icon: summoner[:border_icon]}
   end
 
   def renew_league_entry
     summoner = Summoner.find_by(summonerId: params['id'], region: params['region'])
-    update_league_entry(params['id'], params['region'], summoner)
-    render json: {league_entry: summoner[:league], border_icon: summoner[:border_icon]}
+    if update_league_entry(params['id'], params['region'], summoner)
+      render json: {league_entry: summoner[:league], border_icon: summoner[:border_icon]}
+    else
+      render json: {league_entry: summoner[:league], border_icon: summoner[:border_icon]}, status: 400
+    end
   end
 
   def update_league_entry(id, region, summoner)
@@ -223,12 +236,14 @@ class SummonersController < ApplicationController
         end
         summoner.update(league: league, border_icon: border_icon)
       end
+      return true
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
       when 1
         retry
       when 2
-        return e
+        summoner.update(league: league, border_icon: nil)
+        return false
       end
     end
   end
@@ -236,15 +251,23 @@ class SummonersController < ApplicationController
   def get_stats_summary
     summoner = Summoner.find_by(summonerId: params['id'].to_i, region: params['region'].to_s)
     if summoner[:stats_summary].nil?
-      update_stats_summary(params['id'], params['region'], summoner)
+      if update_stats_summary(params['id'], params['region'], summoner)
+        render json: {stats_summary: summoner[:stats_summary]}
+      else
+        render json: {stats_summary: summoner[:stats_summary]}, status: 400
+      end
+    else
+      render json: {stats_summary: summoner[:stats_summary]}
     end
-    render json: {stats_summary: summoner[:stats_summary]}
   end
 
   def renew_stats_summary
     summoner = Summoner.find_by(summonerId: params['id'], region: params['region'])
-    update_stats_summary(params['id'], params['region'], summoner)
-    render json: {stats_summary: summoner[:stats_summary]}
+    if update_stats_summary(params['id'], params['region'], summoner)
+      render json: {stats_summary: summoner[:stats_summary]}
+    else
+      render json: {stats_summary: summoner[:stats_summary]}, status: 400
+    end
   end
 
   def update_stats_summary(id, region, summoner)
@@ -296,12 +319,14 @@ class SummonersController < ApplicationController
         end
         summoner.update(stats_summary: stats)
       end
+      return true
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
       when 1
         retry
       when 2
-        return e
+        summoner.update(stats_summary: stats)
+        return false
       end
     end
   end
@@ -309,19 +334,33 @@ class SummonersController < ApplicationController
   def get_stats_ranked
     summoner = Summoner.find_by(summonerId: params['id'], region: params['region'])
     if summoner.stats_rankeds.empty?
-      update_stats_ranked(params['id'], params['region'], summoner)
+      if update_stats_ranked(params['id'], params['region'], summoner)
+        top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
+        all_ranked = summoner.stats_rankeds
+        render json: {top5: top5, all_ranked: all_ranked}
+      else
+        top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
+        all_ranked = summoner.stats_rankeds
+        render json: {top5: top5, all_ranked: all_ranked}, status: 400;
+      end
+    else
+      top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
+      all_ranked = summoner.stats_rankeds
+      render json: {top5: top5, all_ranked: all_ranked}
     end
-    top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
-    all_ranked = summoner.stats_rankeds
-    render json: {top5: top5, all_ranked: all_ranked}
   end
 
   def renew_stats_ranked
     summoner = Summoner.find_by(summonerId: params['id'], region: params['region'])
-    update_stats_ranked(params['id'], params['region'], summoner)
-    top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
-    all_ranked = summoner.stats_rankeds
-    render json: {top5: top5, all_ranked: all_ranked}
+    if update_stats_ranked(params['id'], params['region'], summoner)
+      top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
+      all_ranked = summoner.stats_rankeds
+      render json: {top5: top5, all_ranked: all_ranked}
+    else
+      top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
+      all_ranked = summoner.stats_rankeds
+      render json: {top5: top5, all_ranked: all_ranked}, status: 400;
+    end
   end
 
   def update_stats_ranked(id, region, summoner)
@@ -368,12 +407,13 @@ class SummonersController < ApplicationController
                                        win_rate: (champion['stats']['totalSessionsWon']/(champion['stats']['totalSessionsPlayed'] + 0.0)).round(4))
         end
       end
+      return true
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
       when 1
         retry
       when 2
-        return e
+        return false
       end
     end
   end

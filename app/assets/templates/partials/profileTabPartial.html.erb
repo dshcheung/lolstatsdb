@@ -67,11 +67,22 @@
 </div>
 
 <div class="row">
-  <div class="col-xs-12 col-sm-6 champion-summary">
+  <div ng-show="top5SectionLoading"class="col-xs-12 col-sm-6 champion-summary">
     <div class="summary-title">
-      <label>Top 5 Played Champions</label>
-    </div>    
-    <div class="row" ng-repeat="champ in summonerInfo.stats_ranked_top5 track by $index">
+      <label>Top 5 Played Ranked Champions</label>
+    </div>
+    <div class="row loading-gif">
+      <img class="loading-gif" src="<%= asset_path('loading.gif') %>">
+    </div>
+  </div>
+  <div ng-show="!top5SectionLoading"class="col-xs-12 col-sm-6 champion-summary">
+    <div class="summary-title">
+      <label>Top 5 Played Ranked Champions</label>
+    </div>
+    <div ng-show="!summonerInfo.stats_ranked_top5.length" class="row">
+      <h1>This Summoner Is Unranked</h1>
+    </div>
+    <div ng-show="summonerInfo.stats_ranked_top5.length" class="row" ng-repeat="champ in summonerInfo.stats_ranked_top5 track by $index">
       <div class="champ-info pull-left">
         <div class="info-image"><img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/champion/{{champ.champion_name_key}}.png "></div>
         <div class="info-name">{{champ.champion_name}}</div>
@@ -87,11 +98,23 @@
       </div>
     </div>
   </div>
-  <div class="col-xs-12 col-sm-6 position-summary">
+
+  <div ng-show="positionSectionLoading" class="col-xs-12 col-sm-6 position-summary">
     <div class="summary-title">
       <label>Recent Position Frequency</label>
     </div>
-    <div class="row">
+    <div class="row loading-gif">
+      <img class="loading-gif" src="<%= asset_path('loading.gif') %>">
+    </div>
+  </div>
+  <div ng-show="!positionSectionLoading" class="col-xs-12 col-sm-6 position-summary">
+    <div class="summary-title">
+      <label>Recent Position Frequency</label>
+    </div>
+    <div ng-show="!summonerInfo.matches.length" class="row position-no-record">
+      <h1>This Summoner Have No Recent Games</h1>
+    </div>
+    <div ng-show="summonerInfo.matches.length" class="row">
       <div style="width: 100%;height: 580px;"
         data-ac-chart="'pie'" 
         data-ac-data="summonerInfo.positionFrequency" 
