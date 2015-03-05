@@ -22,7 +22,7 @@ app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$route
     $http.post('/summoner/name', data).success(function(response){
       $location.path('/summoner/' + $scope.selectedRegion.code + '/' + response.summoner.summonerId);
     }).error(function(response){
-      var n = noty({text: 'No Summoner With This Name In ' + $scope.selectedRegion.code});
+      var n = noty({text: 'No Summoner With This Name In ' + $scope.selectedRegion.code, type: "error", timeout: 3000, closeWith: ['click']});
     })
   }
 
@@ -34,5 +34,9 @@ app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$route
     } else {
       $location.path('/summoner/' + $scope.selectedRegion.code);
     }
+  }
+
+  $scope.convertDate = function (target){
+    return moment(target).fromNow();
   }
 }])
