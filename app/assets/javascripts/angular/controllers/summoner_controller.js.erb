@@ -1,6 +1,7 @@
 app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'NotyServices', function($scope, $routeParams, $http, $window, NotyServices){
   // Summoner Information
   // Set Initial Information
+  $scope.responseError = {};
   $scope.summonerInfo = {};
   $scope.summonerInfo.searchData = {
     'id': $routeParams.summonerId,
@@ -20,6 +21,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
     }).error(function(response){
       console.log("Summoner By Id", response);
       $scope.loadError = true;
+      $scope.responseError[response.code] = true;
       $scope.summonerLoading = false;
       $scope.checkLoadingAll();
     })
@@ -35,7 +37,9 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
         $scope.leagueTabLoading = false;
         $scope.summonerInfo.leagueEntry = response.league_entry;
         $scope.summonerInfo.borderIcon = response.border_icon;
-        $scope.getLeagueAll();
+        if ($scope.summonerInfo.leagueEntry.solo5 != null){
+          $scope.getLeagueAll();
+        }
         $scope.checkLoadingAll();
       }).error(function(response){
         console.log('Get League Entry', response);
@@ -178,8 +182,10 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
       $scope.matchesTabLoading = false;
       $scope.positionSectionLoading = false;
       $scope.summonerInfo.matches = response.match_history;
-      $scope.getMatchDetails(response.match_history[0].matchId, 0);
-      $scope.getPositionFrequency();
+      if (response.match_history[0] != undefined) {
+        $scope.getMatchDetails(response.match_history[0].matchId, 0);
+        $scope.getPositionFrequency();
+      }
       $scope.checkLoadingAll();
     }).error(function(response){
       console.log("Get Match History", response);
