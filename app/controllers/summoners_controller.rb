@@ -22,11 +22,11 @@ class SummonersController < ApplicationController
       end
       render json: {success: true, summoner: summoner}, status: 200
     rescue OpenURI::HTTPError => e
-      case rescue_me(e)
-      when 1
-        retry
-      when 2
-        render json: {success: false}, status: 400
+      case e.io.status[0]
+      when 429
+        render json: {success: false, code: "tooMany"}, status: 429
+      else
+        render json: {success: false, code: "notFound"}, status: 400
       end
     end
   end
@@ -50,11 +50,11 @@ class SummonersController < ApplicationController
       end
       render json: {success: true, summoner: summoner}, status: 200
     rescue OpenURI::HTTPError => e
-      case rescue_me(e)
-      when 1
-        retry
-      when 2
-        render json: {success: false}, status: 400
+      case e.io.status[0]
+      when 429
+        render json: {success: false, code: "tooMany"}, status: 429
+      else
+        render json: {success: false, code: "notFound"}, status: 400
       end
     end
   end

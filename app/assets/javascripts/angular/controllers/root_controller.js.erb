@@ -1,4 +1,4 @@
-app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$routeParams', '$http', function($scope, RegionTagsServices, $location, $routeParams, $http){
+app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$routeParams', '$http', 'NotyServices', function($scope, RegionTagsServices, $location, $routeParams, $http, NotyServices){
 
   $scope.regions = RegionTagsServices.region;
   var regionCode = $location.path().split('/')
@@ -20,9 +20,11 @@ app.controller('RootCtrl', ['$scope', 'RegionTagsServices', '$location', '$route
     };
 
     $http.post('/summoner/name', data).success(function(response){
+      console.log("Summoner By Name", response);
       $location.path('/summoner/' + $scope.selectedRegion.code + '/' + response.summoner.summonerId);
     }).error(function(response){
-      var n = noty({text: 'No Summoner With This Name In ' + $scope.selectedRegion.code, type: "error", timeout: 3000, closeWith: ['click']});
+      console.log("Summoner By Name", response);
+      NotyServices[response.code]($scope);
     })
   }
 

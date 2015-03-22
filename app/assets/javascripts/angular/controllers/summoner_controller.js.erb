@@ -1,4 +1,4 @@
-app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', function($scope, $routeParams, $http, $window){
+app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'NotyServices', function($scope, $routeParams, $http, $window, NotyServices){
   // Summoner Information
   // Set Initial Information
   $scope.summonerInfo = {};
@@ -9,15 +9,16 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', fu
   $scope.searchSummonerById = function () {
     $scope.summonerLoading = true;
     $http.post('/summoner/id', $scope.summonerInfo.searchData).success(function(response){
-      console.log(response);
-      $scope.summonerLoading = false;
+      console.log("Summoner By Id", response);
       $scope.summonerInfo.profileIconId = response.summoner.profileIconId;
       $scope.summonerInfo.name = response.summoner.name;
       $scope.summonerInfo.level = response.summoner.level;
       $scope.summonerInfo.summonerId = response.summoner.summonerId;
       $scope.$parent.renewAgo = response.summoner.updated_at;
+      $scope.summonerLoading = false;
       $scope.checkLoadingAll();
     }).error(function(response){
+      console.log("Summoner By Id", response);
       $scope.loadError = true;
       $scope.summonerLoading = false;
       $scope.checkLoadingAll();
