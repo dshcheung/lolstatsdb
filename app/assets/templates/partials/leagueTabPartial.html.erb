@@ -6,14 +6,14 @@
   </div>
   <div ng-show="!leagueTabLoading" class="league-table">
     <div class="league-title">
-      <div class="league-badge"><img src="{{summonerInfo.league.all.badge_icon}}"></div>
+      <div class="league-badge"><img src="{{summonerInfo.leagueAll.badge_icon}}"></div>
       <div class="page-icon">
         <div><a ng-click="leaguePage.onPageChangeUp()"><i class="fa fa-chevron-up"></i></a></div>
         <div><a ng-click="leaguePage.onPageChangeDown()"><i class="fa fa-chevron-down"></i></a></div>
       </div>
       <div class="league-info">
-        <div><label>{{leagueSearch.leagueName}}</label></div>
-        <div><label>{{leagueSearch.tier}}, Division {{leagueSearch.division}}</label></div>
+        <div><label>{{summonerInfo.searchData.leagueName}}</label></div>
+        <div><label>{{summonerInfo.searchData.tier}}, Division {{summonerInfo.searchData.division}}</label></div>
       </div>
     </div>
     <div class="league-promo">
@@ -28,11 +28,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="summoner in summonerInfo.league.all.league_promo track by $index">
+          <tr ng-repeat="summoner in summonerInfo.leagueAll.league_promo track by $index">
             <td>{{$index + 1}}</td>
             <td>
               <div>
-                <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/profileicon/{{summonerInfo.league.all.summoners[summoner.summonerId].profileIconId}}.png">
+                <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/profileicon/{{summonerInfo.leagueAll.summoners[summoner.summonerId].profileIconId}}.png">
               </div>
               <div>
                 <a href="/#/summoner/{{summoner.region}}/{{summoner.summonerId}}">{{summoner.entry.playerOrTeamName}}</a>
@@ -65,11 +65,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="summoner in summonerInfo.league.all.league_normal track by $index">
-            <td>{{$index + summonerInfo.league.all.league_promo.length + 1}}</td>
+          <tr ng-repeat="summoner in summonerInfo.leagueAll.league_normal track by $index">
+            <td>{{$index + summonerInfo.leagueAll.league_promo.length + 1}}</td>
             <td>
               <div>
-                <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/profileicon/{{summonerInfo.league.all.summoners[summoner.summonerId].profileIconId}}.png">
+                <img src="https://ddragon.leagueoflegends.com/cdn/5.4.1/img/profileicon/{{summonerInfo.leagueAll.summoners[summoner.summonerId].profileIconId}}.png">
               </div>
               <div>
                 <a href="/#/summoner/{{summoner.region}}/{{summoner.summonerId}}">{{summoner.entry.playerOrTeamName}}</a>
