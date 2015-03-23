@@ -29,7 +29,6 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
 
   {// Summoner League Stuff Start
     $scope.queType = ["Solo 5x5", "Team 3x3", "Team 5x5"];
-    $scope.badgeDefault = "<%= asset_path('badgeDefault.png') %>";
     $scope.getLeagueEntry = function (){
       $scope.leagueTabLoading = true;
       $http.post($scope.routesLink.leagueEntry, $scope.summonerInfo.searchData).success(function(response){
@@ -261,15 +260,32 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
     var x9 = $scope.summonerLoading;
     if (!x1 && !x2 && !x3 && !x4 && !x5 && !x6 && !x7 && !x8 & !x9){
       if ($scope.loadError) {
+        var prompt = false
+        if ($scope.responseError.tooMany && prompt != true){
+          NotyServices.tooMany($scope);
+          prompt = true;
+        }
+        if ($scope.responseError.serviceError && prompt != true) {
+          NotyServices.serviceError($scope);
+        }
+        if ($scope.responseError.noSummoner && prompt != true) {
+          NotyServices.noSummoner($scope);
+        }
+        if ($scope.responseError.noLeague) {
+          NotyServices.noLeague($scope);
+        }
         console.log("tooMany",$scope.responseError.tooMany);
-        console.log("notFound",$scope.responseError.notFound);
         console.log("serviceError",$scope.responseError.serviceError);
+        console.log("noSummoner",$scope.responseError.tooMany);
+        console.log("noLeague",$scope.responseError.noLeague);
         $scope.loadError = false;
       } else if ($scope.renwed == true){
-        NotyServices.renewed();
+        NotyServices.renewed($scope);
         $scope.renwed = false;
+      } else {
+        NotyServices.success($scope);
       }
-    }
+    } 
   }
 
   $scope.staticData = {};

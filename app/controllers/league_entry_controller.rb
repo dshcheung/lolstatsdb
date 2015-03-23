@@ -63,7 +63,7 @@ class LeagueEntryController < ApplicationController
         return {success: false, code: "tooMany", league_entry: league, border_icon: nil}
       when "404"
         summoner.update(league: league, border_icon: nil)
-        return {success: false, code: "notFound", league_entry: league, border_icon: nil}
+        return {success: false, code: "noLeague", league_entry: league, border_icon: nil}
       else
         return {success: false, code: "serviceError", league_entry: league, border_icon: nil}
       end

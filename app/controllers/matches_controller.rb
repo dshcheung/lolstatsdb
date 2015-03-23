@@ -55,7 +55,7 @@ class MatchesController < ApplicationController
       when "429"
         return {success: false, code: "tooMany"}
       when "404"
-        return {success: false, code: "notFound"}
+        return {success: false, code: "serviceError"}
       else
         return {success: false, code: "serviceError"}
       end
@@ -128,7 +128,7 @@ class MatchesController < ApplicationController
       when "429"
         return {success: true, code: "tooMany"}
       when "404"
-        return {success: true, code: "notFound"}
+        return {success: true, code: "serviceError"}
       else
         return {success: true, code: "serviceError"}
       end

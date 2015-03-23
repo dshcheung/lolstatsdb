@@ -68,7 +68,7 @@ class LeagueAllController < ApplicationController
       when "429"
         return {success: false, code: "tooMany"}
       when "404"
-        return {success: false, code: "notFound"}
+        return {success: false, code: "noLeague"}
       else
         return {success: false, code: "serviceError"}
       end
@@ -115,7 +115,7 @@ class LeagueAllController < ApplicationController
       when "429"
         render json: {success: true, code: "tooMany", summoners: {summoners: nil}}, status: 429
       when "404"
-        render json: {success: true, code: "notFound", summoners: {summoners: nil}}, status: 400
+        render json: {success: true, code: "serviceError", summoners: {summoners: nil}}, status: 400
       else 
         render json: {success: true, code: "serviceError", summoners: {summoners: nil}}, status: 400
       end

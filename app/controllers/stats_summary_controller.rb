@@ -78,7 +78,7 @@ class StatsSummaryController < ApplicationController
         return {success: false, code: "tooMany", stats_summary: stats}
       when "404"
         summoner.update(stats_summary: stats)
-        return {success: false, code: "notFound", stats_summary: stats}
+        return {success: false, code: "serviceError", stats_summary: stats}
       else 
         return {success: false, code: "serviceError", stats_summary: stats}
       end
