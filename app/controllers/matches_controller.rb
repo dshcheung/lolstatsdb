@@ -2,26 +2,20 @@ class MatchesController < ApplicationController
   def get_match_histories
     matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
     if matches.empty?
-      if update_match_histories(params['id'], params['region'])
-        matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
-        render json: {match_history: matches}
-      else
-        matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
-        render json: {match_history: matches}, status: 400
-      end
+      renew_match_histories
     else
       matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
-      render json: {match_history: matches}
+      render json: {match_history: matches}, status: 200
     end
   end
 
   def renew_match_histories
-    if update_match_histories(params['id'], params['region'])
-      matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
-      render json: {match_history: matches}
+    info = update_match_histories(params['id'], params['region'])
+    matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
+    if info[:success]
+      render json: {match_history: matches}, status: 200
     else
-      matches = MatchHistory.where(summonerId: params['id'], region: params['region']).order(match_creation: :desc).limit(10)
-      render json: {match_history: matches}, status: 400
+      render json: {match_history: matches, code: info[:code]}, status: 400
     end
   end
 
@@ -55,13 +49,15 @@ class MatchesController < ApplicationController
                               lane: match['participants'][0]['timeline']['lane'])
         end
       end
-      return true
+      return {success: true}
     rescue OpenURI::HTTPError => e
-      case rescue_me(e)
-      when 1
-        retry
-      when 2
-        return false
+      case e.io.status[0]
+      when "429"
+        return {success: false, code: "tooMany"}
+      when "404"
+        return {success: false, code: "notFound"}
+      else
+        return {success: false, code: "serviceError"}
       end
     end
   end
@@ -69,16 +65,17 @@ class MatchesController < ApplicationController
   def get_match_details
     match = MatchDetail.find_by(matchId: params['matchId'], region: params['region'])
     if match.nil?
-      if update_match_details(params['matchId'], params['region'])
+      info = update_match_details(params['matchId'], params['region'])
+      if info[:success]
         match = MatchDetail.find_by(matchId: params['matchId'], region: params['region'])
-        render json: {details: match}
+        render json: {details: match}, status: 200
       else
         match = MatchDetail.find_by(matchId: params['matchId'], region: params['region'])
-        render json: {details: match}, status: 400
+        render json: {details: match, code: info[:code]}, status: 400
       end
     else
       match = MatchDetail.find_by(matchId: params['matchId'], region: params['region'])
-      render json: {details: match}
+      render json: {details: match}, status: 200
     end
   end
 
@@ -125,13 +122,15 @@ class MatchesController < ApplicationController
                            participants: participants,
                            participant_identities: response['participantIdentities'])
       end
-      return true
+      return {success: true}
     rescue OpenURI::HTTPError => e
       case rescue_me(e)
-      when 1
-        retry
-      when 2
-        return false
+      when "429"
+        return {success: true, code: "tooMany"}
+      when "404"
+        return {success: true, code: "notFound"}
+      else
+        return {success: true, code: "serviceError"}
       end
     end
   end
@@ -163,9 +162,5 @@ class MatchesController < ApplicationController
       end
     end
     render json: {frequency: frequency}
-  end
-
-  def rescue_me(e)
-    return 2
   end
 end

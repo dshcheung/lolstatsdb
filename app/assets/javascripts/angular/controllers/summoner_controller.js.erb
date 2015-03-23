@@ -1,6 +1,7 @@
-app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', function($scope, $routeParams, $http, $window){
+app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'NotyServices', function($scope, $routeParams, $http, $window, NotyServices){
   // Summoner Information
   // Set Initial Information
+  $scope.responseError = {};
   $scope.summonerInfo = {};
   $scope.summonerInfo.searchData = {
     'id': $routeParams.summonerId,
@@ -9,7 +10,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', fu
   $scope.searchSummonerById = function () {
     $scope.summonerLoading = true;
     $http.post('/summoner/id', $scope.summonerInfo.searchData).success(function(response){
-      console.log(response);
+      console.log("Summoner By Id", response);
       $scope.summonerLoading = false;
       $scope.summonerInfo.profileIconId = response.summoner.profileIconId;
       $scope.summonerInfo.name = response.summoner.name;
@@ -18,196 +19,197 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', fu
       $scope.$parent.renewAgo = response.summoner.updated_at;
       $scope.checkLoadingAll();
     }).error(function(response){
+      console.log("Summoner By Id", response);
       $scope.loadError = true;
+      $scope.responseError[response.code] = true;
       $scope.summonerLoading = false;
       $scope.checkLoadingAll();
     })
   };
-  $scope.summonerInfo.league = {};
-  $scope.queType = ["Solo 5x5", "Team 3x3", "Team 5x5"];
-  $scope.badgeDefault = "<%= asset_path('badgeDefault.png') %>";
-  $scope.getLeagueEntry = function (){
-    $scope.leagueTabLoading = true;
-    $http.post($scope.routesLink.leagueEntry, $scope.summonerInfo.searchData).success(function(response){
-      console.log(response);
-      $scope.leagueTabLoading = false;
-      $scope.summonerInfo.league.entry = response.league_entry;
-      $scope.summonerInfo.borderIcon = response.border_icon;
-      $scope.getLeagueAll();
-      $scope.checkLoadingAll();
-    }).error(function(response){
-      $scope.loadError = true;
-      $scope.leagueTabLoading = false;
-      $scope.checkLoadingAll();
-    })
-  };
-  $scope.getLeagueAll = function (){
-    $scope.leagueTabLoading = true;
-    var leagueEntry = $scope.summonerInfo.league.entry
-    $scope.leagueSearch = $scope.summonerInfo.searchData;
-    $scope.leagueSearch.queue = leagueEntry.solo5.queue;
-    $scope.leagueSearch.leagueName = leagueEntry.solo5.name;
-    $scope.leagueSearch.tier = leagueEntry.solo5.tier;
-    $scope.leagueSearch.division = leagueEntry.solo5.entries[0].division;
 
-    $http.post($scope.routesLink.leagueAll, $scope.leagueSearch).success(function(response) {
-        console.log(response);
-      $scope.leagueTabLoading = false;
-      $scope.summonerInfo.league.all = response;
-      $scope.getSummonersIcons(response.league_promo, response.league_normal);
-      $scope.checkLoadingAll();
-    }).error(function(response){
-      $scope.loadError = true;
-      $scope.leagueTabLoading = false;
-      $scope.checkLoadingAll();
-    })
-  };
-  $scope.changeLeagueAll = function (division){
-    $scope.changeLeagueSearch = $scope.leagueSearch;
-    switch (division){
-      case 1:
-        $scope.changeLeagueSearch.division = "I";
-        break;
-      case 2:
-        $scope.changeLeagueSearch.division = "II";
-        break;
-      case 3:
-        $scope.changeLeagueSearch.division = "III";
-        break;
-      case 4:
-        $scope.changeLeagueSearch.division = "IV";
-        break;
-      case 5:
-        $scope.changeLeagueSearch.division = "V";
-        break;
-    }
-    $http.post('/summoner/get_league_page', $scope.changeLeagueSearch).success(function(response){
-      console.log(response);
-      $scope.summonerInfo.league.all = response;
-      $scope.getSummonersIcons(response.league_promo, response.league_normal);
-      $scope.checkLoadingAll();
-    })
-  }
-  //paginate for league page stuff
-  $scope.leaguePage = {};
-  $scope.leaguePage.current = 1;
-  $scope.leaguePage.onPageChangeUp = function (){
-    if (this.current > 1){
-      this.current -= 1;
-    $scope.changeLeagueAll(this.current);
-    }
-    console.log(this.current);
-  };
-  $scope.leaguePage.onPageChangeDown = function (){
-    if (this.current < 5){
-      this.current += 1;
-    $scope.changeLeagueAll(this.current);
-    }
-    console.log(this.current);
-  };
-  $scope.getSummonersIcons = function (list1, list2){
-    $scope.iconSearch = {};
-    $scope.iconSearch.region = $scope.leagueSearch.region;
-    $scope.iconSearch.summonerList = [];
-    for (var index in list1) {
-      $scope.iconSearch.summonerList.push(list1[index].summonerId);
-    }
-    for (var index in list2) {
-      $scope.iconSearch.summonerList.push(list2[index].summonerId);
-    }
-    if ($scope.iconSearch.summonerList[0] != undefined){
-      $scope.iconLoading = true;
-      $http.post('/summoner/get_icon_list', $scope.iconSearch).success(function(response){
-        console.log(response);
-        $scope.iconLoading = false;
-        $scope.summonerInfo.league.all.summoners = response.summoners;
+  {// Summoner League Stuff Start
+    $scope.queType = ["Solo 5x5", "Team 3x3", "Team 5x5"];
+    $scope.badgeDefault = "<%= asset_path('badgeDefault.png') %>";
+    $scope.getLeagueEntry = function (){
+      $scope.leagueTabLoading = true;
+      $http.post($scope.routesLink.leagueEntry, $scope.summonerInfo.searchData).success(function(response){
+        console.log('Get League Entry', response);
+        $scope.leagueTabLoading = false;
+        $scope.summonerInfo.leagueEntry = response.league_entry;
+        $scope.summonerInfo.borderIcon = response.border_icon;
+        if ($scope.summonerInfo.leagueEntry.solo5 != null){
+          $scope.getLeagueAll();
+        }
         $scope.checkLoadingAll();
       }).error(function(response){
+        console.log('Get League Entry', response);
         $scope.loadError = true;
-        $scope.iconLoading = false;
+        $scope.responseError[response.code] = true;
+        $scope.leagueTabLoading = false;
         $scope.checkLoadingAll();
       })
-    }
-  }
+    };
+    $scope.getLeagueAll = function (){
+      $scope.leagueTabLoading = true;
+      var leagueEntry = $scope.summonerInfo.leagueEntry
+      $scope.summonerInfo.searchData.queue = leagueEntry.solo5.queue;
+      $scope.summonerInfo.searchData.leagueName = leagueEntry.solo5.name;
+      $scope.summonerInfo.searchData.tier = leagueEntry.solo5.tier;
+      $scope.summonerInfo.searchData.division = leagueEntry.solo5.entries[0].division;
 
-  $scope.summonerInfo.stats_summary = {}
+      $http.post($scope.routesLink.leagueAll, $scope.summonerInfo.searchData).success(function(response) {
+        console.log('Get League All', response);
+        $scope.summonerInfo.leagueAll = response;
+        $scope.leagueTabLoading = false;
+        $scope.getSummonersIcons(response.league_promo, response.league_normal);
+        $scope.checkLoadingAll();
+      }).error(function(response){
+        console.log('Get League All', response);
+        $scope.responseError[response.code] = true;
+        $scope.loadError = true;
+        $scope.leagueTabLoading = false;
+        $scope.checkLoadingAll();
+      })
+    };
+    $scope.getSummonersIcons = function (list1, list2){
+      $scope.summonerInfo.searchData.summonerList = [];
+      for (var index in list1) {
+        $scope.summonerInfo.searchData.summonerList.push(list1[index].summonerId);
+      }
+      for (var index in list2) {
+        $scope.summonerInfo.searchData.summonerList.push(list2[index].summonerId);
+      }
+      if ($scope.summonerInfo.searchData.summonerList[0] != undefined){
+        $scope.iconLoading = true;
+        $http.post('/summoner/get_icon_list', $scope.summonerInfo.searchData).success(function(response){
+          console.log('Get Summoners Icon', response);
+          $scope.iconLoading = false;
+          $scope.summonerInfo.leagueAll.summoners = response.summoners;
+          $scope.checkLoadingAll();
+        }).error(function(response){
+          console.log('Get Summoners Icon', response);
+          $scope.responseError[response.code] = true;
+          $scope.loadError = true;
+          $scope.iconLoading = false;
+          $scope.checkLoadingAll();
+        })
+      }
+    };
+    // Change League Division
+    $scope.changeLeagueAll = function (division){
+      switch (division){
+        case 1:
+          $scope.summonerInfo.searchData.division = "I";
+          break;
+        case 2:
+          $scope.summonerInfo.searchData.division = "II";
+          break;
+        case 3:
+          $scope.summonerInfo.searchData.division = "III";
+          break;
+        case 4:
+          $scope.summonerInfo.searchData.division = "IV";
+          break;
+        case 5:
+          $scope.summonerInfo.searchData.division = "V";
+          break;
+      }
+      $http.post('/summoner/get_league_page', $scope.summonerInfo.searchData).success(function(response){
+        console.log("Change League Division", response);
+        $scope.summonerInfo.leagueAll = response;
+        $scope.getSummonersIcons(response.league_promo, response.league_normal);
+        $scope.checkLoadingAll();
+      })
+    };
+    // Paginate for league page stuff
+    $scope.leaguePage = {};
+    $scope.leaguePage.current = 1;
+    $scope.leaguePage.onPageChangeUp = function (){
+      if (this.current > 1){
+        this.current -= 1;
+      $scope.changeLeagueAll(this.current);
+      }
+      console.log("Current Page", this.current);
+    };
+    $scope.leaguePage.onPageChangeDown = function (){
+      if (this.current < 5){
+        this.current += 1;
+      $scope.changeLeagueAll(this.current);
+      }
+      console.log("Current Page", this.current);
+    };
+  }// Summoner League Stuff Start
+
   $scope.getStatsSummary = function (){
     $scope.summarySectionLoading = true;
     $http.post($scope.routesLink.statsSummary, $scope.summonerInfo.searchData).success(function(response){
+      console.log('Get Stats Summary', response);
       $scope.summarySectionLoading = false;
-      console.log(response);
       $scope.summonerInfo.stats_summary = response.stats_summary;
       $scope.checkLoadingAll();
     }).error(function(response){
+      console.log('Get Stats Summary', response);
+      $scope.responseError[response.code] = true;
       $scope.loadError = true;
       $scope.summarySectionLoading = false;
       $scope.checkLoadingAll();
     })
   };
-  $scope.summonerInfo.stats_ranked = {}
   $scope.getStatsRanked = function (){
     $scope.championTabLoading = true;
     $scope.top5SectionLoading = true;
     $http.post($scope.routesLink.statsRanked, $scope.summonerInfo.searchData).success(function(response){
-      console.log(response);
+      console.log("Get Stats Ranked", response);
       $scope.championTabLoading = false;
       $scope.top5SectionLoading = false;
       $scope.summonerInfo.stats_ranked_top5 = response.top5;
       $scope.summonerInfo.stats_ranked_all = response.all_ranked;
       $scope.checkLoadingAll();
     }).error(function(response){
+      console.log("Get Stats Ranked", response);
+      $scope.responseError[response.code] = true;
       $scope.loadError = true;
       $scope.championTabLoading = false;
       $scope.top5SectionLoading = false;
       $scope.checkLoadingAll();
     })
   }
+
   //table sorting stuff
   $scope.predicate = "total_games";
   $scope.reverse = true;
 
-  $scope.summonerInfo.matches = {};
-  $scope.summonerInfo.match = {};
   $scope.getMatchHistory = function () {
     $scope.matchesTabLoading = true;
     $scope.positionSectionLoading = true;
     $http.post($scope.routesLink.matchHistory, $scope.summonerInfo.searchData).success(function(response){
-      console.log(response);
+      console.log("Get Match History", response);
       $scope.matchesTabLoading = false;
       $scope.positionSectionLoading = false;
       $scope.summonerInfo.matches = response.match_history;
-      $scope.getMatchDetails(response.match_history[0].matchId, 0);
-      $scope.getPositionFrequency();
+      if (response.match_history[0] != undefined) {
+        $scope.getMatchDetails(response.match_history[0].matchId, 0);
+        $scope.getPositionFrequency();
+      }
       $scope.checkLoadingAll();
     }).error(function(response){
+      console.log("Get Match History", response);
       $scope.loadError = true;
       $scope.matchesTabLoading = false;
       $scope.positionSectionLoading = false;
       $scope.checkLoadingAll();
     })
   };
-  $scope.getPositionFrequency = function(){
-    $scope.positionSectionLoading = true;
-    $http.post($scope.routesLink.positionFrequency, $scope.summonerInfo.searchData).success(function(response){
-      console.log(response);
-      $scope.positionSectionLoading = false;
-      $scope.summonerInfo.positionFrequency = response.frequency;
-      $scope.checkLoadingAll();
-    }).error(function(response){
-      $scope.loadError = true;
-      $scope.positionSectionLoading = false;
-      $scope.checkLoadingAll();
-    })
-  }
+  $scope.summonerInfo.match = {};
   $scope.matchDetailIndex = undefined;
   $scope.getMatchDetails = function (matchId, index) {
     $scope.matchSectionLoading = true;
     if(index != $scope.matchDetailIndex){
       $scope.matchDetailIndex = index;
       $scope.selectedMatch = matchId;
-      $scope.searchMatchDetails = $scope.summonerInfo.searchData;
-      $scope.searchMatchDetails.matchId = matchId;
-      $http.post($scope.routesLink.matchDetail, $scope.searchMatchDetails).success(function(response){
+      $scope.summonerInfo.searchData.matchId = matchId;
+      $http.post($scope.routesLink.matchDetail, $scope.summonerInfo.searchData).success(function(response){
+        console.log("Get Match Details", response);
         $scope.matchSectionLoading = false;
         $scope.summonerInfo.match.team = {};
         $scope.summonerInfo.match.team.team100 = [];
@@ -220,18 +222,34 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', fu
           }
         }
         $scope.summonerInfo.match.details = response.details
-        console.log($scope.summonerInfo.match);
+        console.log("Match Details", $scope.summonerInfo.match);
         $scope.checkLoadingAll();
       }).error(function(response){
+        console.log("Get Match Details", response);
         $scope.loadError = true;
         $scope.matchSectionLoading = false;
         $scope.checkLoadingAll();
       })
     }
   };
+  $scope.getPositionFrequency = function(){
+    $scope.positionSectionLoading = true;
+    $http.post($scope.routesLink.positionFrequency, $scope.summonerInfo.searchData).success(function(response){
+      console.log("Get Position Frequency", response);
+      $scope.positionSectionLoading = false;
+      $scope.summonerInfo.positionFrequency = response.frequency;
+      $scope.checkLoadingAll();
+    }).error(function(response){
+      console.log("Get Position Frequency", response);
+      $scope.loadError = true;
+      $scope.positionSectionLoading = false;
+      $scope.checkLoadingAll();
+    })
+  }
 
   $scope.loadError = false;
   $scope.checkLoadingAll = function(){
+    console.log("Response Error", $scope.responseError, "Load Error", $scope.loadError)
     var x1 = $scope.leagueTabLoading;
     var x2 = $scope.championTabLoading;
     var x3 = $scope.top5SectionLoading;
@@ -241,13 +259,15 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', fu
     var x7 = $scope.iconLoading;
     var x8 = $scope.summarySectionLoading;
     var x9 = $scope.summonerLoading;
-    console.log($scope.loadError);
     if (!x1 && !x2 && !x3 && !x4 && !x5 && !x6 && !x7 && !x8 & !x9){
       if ($scope.loadError) {
-        var n = noty({text: 'Too many summoner renewing, please try again laster', type: "error", timeout: 3000, closeWith: ['click']});
+        console.log("tooMany",$scope.responseError.tooMany);
+        console.log("notFound",$scope.responseError.notFound);
+        console.log("serviceError",$scope.responseError.serviceError);
         $scope.loadError = false;
-      } else {
-        var n = noty({text: 'Data has been renewed', type: "success", timeout: 3000, closeWith: ['click']});
+      } else if ($scope.renwed == true){
+        NotyServices.renewed();
+        $scope.renwed = false;
       }
     }
   }
@@ -284,6 +304,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', fu
   }
 
   $scope.$parent.renewAll = function (){
+    $scope.responseError = {};
     $scope.setRoutesRenew();
     $scope.searchSummonerById();
     $scope.getLeagueEntry();

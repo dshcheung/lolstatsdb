@@ -1,0 +1,17 @@
+app.factory('NotyServices', ['$http', function($http){
+  var n = {};
+
+  n.notFound = function (scope) {
+    var n = noty({text: 'No Summoner With This Name In ' + scope.selectedRegion.code, type: "error", timeout: 3000, closeWith: ['click']});
+  }
+
+  n.tooMany = function (scope) {
+    var n = noty({text: 'Too many sumbmoner renewing, please try again later', type: "error", timeout: 3000, closeWith: ['click']});
+  }
+  
+  n.renewed = function (scope){
+    noty({text: 'Data has been renewed', type: "success", timeout: 3000, closeWith: ['click']});
+  }
+
+  return n
+}])
