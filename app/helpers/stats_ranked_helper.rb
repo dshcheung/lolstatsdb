@@ -1,0 +1,2 @@
+module StatsRankedHelper
+end
