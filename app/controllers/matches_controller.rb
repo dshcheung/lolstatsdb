@@ -25,28 +25,30 @@ class MatchesController < ApplicationController
 
     @tries = 0
     begin
-      url = "https://#{region.downcase}.api.pvp.net/api/lol/#{region.downcase}/v2.2/matchhistory/#{id}?beginIndex=0&endIndex=14&api_key=#{ENV['API_KEY']}"
+      url = "https://#{region.downcase}.api.pvp.net/api/lol/#{region.downcase}/v1.3/game/by-summoner/#{id}/recent?api_key=#{ENV['API_KEY']}"
       response = JSON.parse(open(url).read)
 
       if not response.empty?
-        response['matches'].each do |match|
-          if match['participants'][0]['stats']['winner']
+        puts response['games']
+        response['games'].each do |match|
+          if match['stats']['win']
             winner = "true"
           else
             winner = "false"
           end
-          champ = Champion.find_by(championId: match['participants'][0]['championId'], region: region)
+          champ = Champion.find_by(championId: match['championId'], region: region)
           MatchHistory.create(summonerId: id,
-                              matchId: match['matchId'],
-                              match_creation: match['matchCreation'],
+                              matchId: match['gameId'],
+                              match_creation: match['createDate'],
                               region: region,
-                              queue: match['queueType'],
+                              queue: match['subType'],
                               winner: winner,
-                              championId: match['participants'][0]['championId'],
+                              championId: match['championId'],
                               champion_name: champ.name,
                               champion_key: champ.name_key,
-                              role: match['participants'][0]['timeline']['role'],
-                              lane: match['participants'][0]['timeline']['lane'])
+                              role: match['stats']['playerRole'],
+                              lane: match['stats']['playerPosition'])
+          # add MatchParticipants db
         end
       end
       return {success: true}
@@ -101,22 +103,12 @@ class MatchesController < ApplicationController
           champ = Champion.find_by(championId: participant['championId'], region: region)
           names.push(champ.name)
           name_keys.push(champ.name_key)
-          MatchHistory.create(summonerId: response['participantIdentities'][index]['player']['summonerId'],
-                              matchId: response['matchId'],
-                              match_creation: response['matchCreation'],
-                              region: region,
-                              queue: response['queueType'],
-                              winner: winner,
-                              championId: participant['championId'],
-                              champion_name: champ.name,
-                              champion_key: champ.name_key,
-                              role: participant['timeline']['role'],
-                              lane: participant['timeline']['lane'])
 
           participants.push(participant)
           participants[index][:champion_name] = champ.name
           participants[index][:champion_name_key] = champ.name_key
         end
+        # Maybe open MatchParticipants, get all summoner id, send request to get summoner names.
         MatchDetail.create(matchId: response['matchId'],
                            region: region,
                            participants: participants,
