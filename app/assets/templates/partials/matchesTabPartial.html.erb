@@ -1,7 +1,7 @@
 <div ng-show="matchesTabLoading" class="row">
   <div class="matches-table">
     <div class="matches-title">
-      <label>Match History</label>
+      <label>Ranked Match History</label>
     </div>
     <div class="matches-body loading-gif">
       <img class="loading-gif" src="<%= asset_path('loading.gif') %>">
@@ -11,7 +11,7 @@
 <div ng-show="!matchesTabLoading" class="row">
   <div class="matches-table">
     <div class="matches-title">
-      <label>Match History</label>
+      <label>Ranked Match History</label>
     </div>
     <div ng-show="summonerInfo.matches[0] == undefined" class="matches-no-record">
       <h1>This Summoner Have Not Played In A Long Time</h1>

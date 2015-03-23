@@ -26,7 +26,7 @@ class SummonersController < ApplicationController
       when "429"
         render json: {success: false, code: "tooMany"}, status: 429
       when "404"
-        render json: {success: false, code: "notFound"}, status: 400
+        render json: {success: false, code: "noSummoner"}, status: 400
       else
         render json: {success: false, code: "serviceError"}, status: 500
       end
@@ -56,8 +56,8 @@ class SummonersController < ApplicationController
       when "429"
         render json: {success: false, code: "tooMany"}, status: 429
       when "404"
-        render json: {success: false, code: "notFound"}, status: 400
-      when "404"
+        render json: {success: false, code: "noSummoner"}, status: 400
+      else
         render json: {success: false, code: "serviceError"}, status: 500
       end
     end

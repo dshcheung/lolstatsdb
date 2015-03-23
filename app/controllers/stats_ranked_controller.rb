@@ -20,7 +20,7 @@ class StatsRankedController < ApplicationController
     if info[:success]
       render json: {top5: top5, all_ranked: all_ranked}, status: 200
     else
-      render json: {top5: top5, all_ranked: all_ranked, code: info[:code]}, status: info[:code]
+      render json: {top5: top5, all_ranked: all_ranked, code: info[:code]}, status: 400
     end
   end
 
@@ -71,7 +71,7 @@ class StatsRankedController < ApplicationController
       when "429"
         return {success: false, code: "tooMany", status: 429}
       when "404"
-        return {success: false, code: "notFound", status: 404}
+        return {success: false, code: "noLeague", status: 404}
       else
         return {success: false, code: "serviceError", status: 400}
       end

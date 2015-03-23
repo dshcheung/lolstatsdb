@@ -19,11 +19,12 @@
           </div>
         </div>
         <div ng-show="type == null" class="league-info">
-          <img src="{{badgeDefault}}" alt="">
+          <img src="<%= asset_path('badgeDefault.png') %>" alt="">
           <div>
             <p>UNRANKED</p>
           </div>
         </div>
+        <div>{{type == null}}</div>
       </div>
     </div>
   </div>
@@ -101,7 +102,7 @@
 
   <div ng-show="positionSectionLoading" class="col-xs-12 col-sm-6 position-summary">
     <div class="summary-title">
-      <label>Recent Position Frequency</label>
+      <label>Recent Ranked Position Frequency</label>
     </div>
     <div class="row loading-gif">
       <img class="loading-gif" src="<%= asset_path('loading.gif') %>">
@@ -109,10 +110,10 @@
   </div>
   <div ng-show="!positionSectionLoading" class="col-xs-12 col-sm-6 position-summary">
     <div class="summary-title">
-      <label>Recent Position Frequency</label>
+      <label>Recent Ranked Position Frequency</label>
     </div>
     <div ng-show="!summonerInfo.matches.length" class="row position-no-record">
-      <h1>This Summoner Have No Recent Games</h1>
+      <h1>This Summoner Have No Recent Ranked Games</h1>
     </div>
     <div ng-show="summonerInfo.matches.length" class="row">
       <div style="width: 100%;height: 580px;"
