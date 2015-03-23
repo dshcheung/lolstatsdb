@@ -4,32 +4,25 @@ class LeagueAllController < ApplicationController
    def get_league_all
     summoner_existance = League.find_by(region: params['region'], queue: params['queue'], name: params['leagueName'], tier: params['tier'], division: params['division'], summonerId: params['id'])
     if summoner_existance.nil?
-      if update_league_all(params['region'], params['id'])
-        render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName'])
-      else
-        render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName']), status: 400
-      end
+      renew_league_all
     else
-      render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName'])
+      render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName']), status: 200
     end
   end
 
   def renew_league_all
-    if update_league_all(params['region'], params['id'])
-      render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName'])
+    info = update_league_all(params['region'], params['id'])
+    page = league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName'])
+    page[:code] = info[:code]
+    if info[:success]
+      render json: page, status: 200
     else
-      render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName']), status: 400
+      render json: page, status: 400
     end
   end
 
-  def league_page(region, queue, tier, division, leagueName)
-    badge_icon = ActionController::Base.helpers.asset_path("badge" +  tier.capitalize + division + ".png")
-    league_promo = League.where(region: region, queue: queue, name: leagueName, tier: tier, division: division, league_points: 100).order(:league_points)
-    league_normal = League.where(region: region, queue: queue, name: leagueName, tier: tier, division: division, league_points: 0..99).order(:league_points).reverse
-    if tier == "CHALLENGER"
-      league_challenger = League.where(region: region, queue: queue, name: leagueName, tier: tier, division: division).order(:league_points).reverse
-    end
-    return {league_promo: league_promo, league_normal: league_normal, league_challenger: league_challenger, badge_icon: badge_icon}
+  def get_league_page
+    render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName']), status: 200
   end
 
   def destroy_old_leagues(id, queue)
@@ -57,7 +50,6 @@ class LeagueAllController < ApplicationController
           league_queue = league["queue"]
           league_tier = league["tier"]
           destroy_old_leagues(id, league_queue)
-          League.where(region: region, queue: league_queue, name: league_name, tier: league_tier).destroy_all
           league["entries"].each do |entry|
             League.create(region: region,
                           queue: league_queue,
@@ -70,19 +62,27 @@ class LeagueAllController < ApplicationController
           end
         end
       end
-      return true
+      return {success: true, code: "success"}
     rescue OpenURI::HTTPError => e
-      case rescue_me(e)
-      when 1
-        retry
-      when 2
-        return false
+      case e.io.status[0]
+      when "429"
+        return {success: false, code: "tooMany"}
+      when "404"
+        return {success: false, code: "notFound"}
+      else
+        return {success: false, code: "serviceError"}
       end
     end
   end
 
-  def get_league_page
-    render json: league_page(params['region'], params['queue'], params['tier'], params['division'], params['leagueName'])
+  def league_page(region, queue, tier, division, leagueName)
+    badge_icon = ActionController::Base.helpers.asset_path("badge" +  tier.capitalize + division + ".png")
+    league_promo = League.where(region: region, queue: queue, name: leagueName, tier: tier, division: division, league_points: 100).order(:league_points)
+    league_normal = League.where(region: region, queue: queue, name: leagueName, tier: tier, division: division, league_points: 0..99).order(:league_points).reverse
+    if tier == "CHALLENGER"
+      league_challenger = League.where(region: region, queue: queue, name: leagueName, tier: tier, division: division).order(:league_points).reverse
+    end
+    return {league_promo: league_promo, league_normal: league_normal, league_challenger: league_challenger, badge_icon: badge_icon}
   end
 
   def get_icon_list
@@ -102,20 +102,22 @@ class LeagueAllController < ApplicationController
         list2 = source_list[40..length-1].join(',')
         url = "https://#{region}.api.pvp.net/api/lol/#{region}/v1.4/summoner/#{list2}?api_key=#{ENV['API_KEY']}"
         response2 = JSON.parse(open(url).read)
-        render json: {summoners: response1.merge(response2)}
+        render json: {success: true, summoners: response1.merge(response2)}, status: 200
       else
         list = source_list.join(',')
         region = params['region'].downcase
         url = "https://#{region}.api.pvp.net/api/lol/#{region}/v1.4/summoner/#{list}?api_key=#{ENV['API_KEY']}"
         response = JSON.parse(open(url).read)
-        render json: {summoners: response}
+        render json: {success: true, summoners: response}, status: 200
       end
     rescue OpenURI::HTTPError => e
-      case rescue_me(e)
-      when 1
-        retry
-      when 2
-        return render json: {message: "too many requests!"}, status: 400
+      case e.io.status[0]
+      when "429"
+        render json: {success: true, code: "tooMany", summoners: {summoners: nil}}, status: 429
+      when "404"
+        render json: {success: true, code: "notFound", summoners: {summoners: nil}}, status: 400
+      else 
+        render json: {success: true, code: "serviceError", summoners: {summoners: nil}}, status: 400
       end
     end
   end

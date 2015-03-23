@@ -58,12 +58,14 @@ class LeagueEntryController < ApplicationController
       end
       return {success: true, league_entry: league, border_icon: border_icon}
     rescue OpenURI::HTTPError => e
-      case e.io.status
-      when 429
+      case e.io.status[0]
+      when "429"
         return {success: false, code: "tooMany", league_entry: league, border_icon: nil}
-      else
+      when "404"
         summoner.update(league: league, border_icon: nil)
         return {success: false, code: "notFound", league_entry: league, border_icon: nil}
+      else
+        return {success: false, code: "serviceError", league_entry: league, border_icon: nil}
       end
     end
   end

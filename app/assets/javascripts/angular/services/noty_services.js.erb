@@ -8,6 +8,10 @@ app.factory('NotyServices', ['$http', function($http){
   n.tooMany = function (scope) {
     var n = noty({text: 'Too many sumbmoner renewing, please try again later', type: "error", timeout: 3000, closeWith: ['click']});
   }
+  
+  n.renewed = function (scope){
+    noty({text: 'Data has been renewed', type: "success", timeout: 3000, closeWith: ['click']});
+  }
 
   return n
 }])

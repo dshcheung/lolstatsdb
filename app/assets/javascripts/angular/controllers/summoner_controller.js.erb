@@ -44,6 +44,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
       }).error(function(response){
         console.log('Get League Entry', response);
         $scope.loadError = true;
+        $scope.responseError[response.code] = true;
         $scope.leagueTabLoading = false;
         $scope.checkLoadingAll();
       })
@@ -64,6 +65,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
         $scope.checkLoadingAll();
       }).error(function(response){
         console.log('Get League All', response);
+        $scope.responseError[response.code] = true;
         $scope.loadError = true;
         $scope.leagueTabLoading = false;
         $scope.checkLoadingAll();
@@ -86,6 +88,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
           $scope.checkLoadingAll();
         }).error(function(response){
           console.log('Get Summoners Icon', response);
+          $scope.responseError[response.code] = true;
           $scope.loadError = true;
           $scope.iconLoading = false;
           $scope.checkLoadingAll();
@@ -112,7 +115,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
           break;
       }
       $http.post('/summoner/get_league_page', $scope.summonerInfo.searchData).success(function(response){
-        console.log(response);
+        console.log("Change League Division", response);
         $scope.summonerInfo.leagueAll = response;
         $scope.getSummonersIcons(response.league_promo, response.league_normal);
         $scope.checkLoadingAll();
@@ -126,14 +129,14 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
         this.current -= 1;
       $scope.changeLeagueAll(this.current);
       }
-      console.log(this.current);
+      console.log("Current Page", this.current);
     };
     $scope.leaguePage.onPageChangeDown = function (){
       if (this.current < 5){
         this.current += 1;
       $scope.changeLeagueAll(this.current);
       }
-      console.log(this.current);
+      console.log("Current Page", this.current);
     };
   }// Summoner League Stuff Start
 
@@ -146,6 +149,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
       $scope.checkLoadingAll();
     }).error(function(response){
       console.log('Get Stats Summary', response);
+      $scope.responseError[response.code] = true;
       $scope.loadError = true;
       $scope.summarySectionLoading = false;
       $scope.checkLoadingAll();
@@ -163,6 +167,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
       $scope.checkLoadingAll();
     }).error(function(response){
       console.log("Get Stats Ranked", response);
+      $scope.responseError[response.code] = true;
       $scope.loadError = true;
       $scope.championTabLoading = false;
       $scope.top5SectionLoading = false;
@@ -244,6 +249,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
 
   $scope.loadError = false;
   $scope.checkLoadingAll = function(){
+    console.log("Response Error", $scope.responseError, "Load Error", $scope.loadError)
     var x1 = $scope.leagueTabLoading;
     var x2 = $scope.championTabLoading;
     var x3 = $scope.top5SectionLoading;
@@ -253,13 +259,15 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
     var x7 = $scope.iconLoading;
     var x8 = $scope.summarySectionLoading;
     var x9 = $scope.summonerLoading;
-    console.log($scope.loadError);
     if (!x1 && !x2 && !x3 && !x4 && !x5 && !x6 && !x7 && !x8 & !x9){
       if ($scope.loadError) {
-        var n = noty({text: 'Too many summoner renewing, please try again laster', type: "error", timeout: 3000, closeWith: ['click']});
+        console.log("tooMany",$scope.responseError.tooMany);
+        console.log("notFound",$scope.responseError.notFound);
+        console.log("serviceError",$scope.responseError.serviceError);
         $scope.loadError = false;
-      } else {
-        var n = noty({text: 'Data has been renewed', type: "success", timeout: 3000, closeWith: ['click']});
+      } else if ($scope.renwed == true){
+        NotyServices.renewed();
+        $scope.renwed = false;
       }
     }
   }
@@ -296,6 +304,7 @@ app.controller('SummonerCtrl', ['$scope', '$routeParams', '$http', '$window', 'N
   }
 
   $scope.$parent.renewAll = function (){
+    $scope.responseError = {};
     $scope.setRoutesRenew();
     $scope.searchSummonerById();
     $scope.getLeagueEntry();

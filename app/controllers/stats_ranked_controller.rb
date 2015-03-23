@@ -1,35 +1,26 @@
 class StatsRankedController < ApplicationController
   include ApplicationHelper
-  
+
   def get_stats_ranked
     summoner = Summoner.find_by(summonerId: params['id'], region: params['region'])
     if summoner.stats_rankeds.empty?
-      if update_stats_ranked(params['id'], params['region'], summoner)
-        top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
-        all_ranked = summoner.stats_rankeds
-        render json: {top5: top5, all_ranked: all_ranked}
-      else
-        top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
-        all_ranked = summoner.stats_rankeds
-        render json: {top5: top5, all_ranked: all_ranked}, status: 400;
-      end
+      renew_stats_ranked
     else
       top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
       all_ranked = summoner.stats_rankeds
-      render json: {top5: top5, all_ranked: all_ranked}
+      render json: {top5: top5, all_ranked: all_ranked}, status: 200
     end
   end
 
   def renew_stats_ranked
     summoner = Summoner.find_by(summonerId: params['id'], region: params['region'])
-    if update_stats_ranked(params['id'], params['region'], summoner)
-      top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
-      all_ranked = summoner.stats_rankeds
-      render json: {top5: top5, all_ranked: all_ranked}
+    info = update_stats_ranked(params['id'], params['region'], summoner)
+    top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
+    all_ranked = summoner.stats_rankeds
+    if info[:success]
+      render json: {top5: top5, all_ranked: all_ranked}, status: 200
     else
-      top5 = summoner.stats_rankeds.order(total_games: :desc).limit(5)
-      all_ranked = summoner.stats_rankeds
-      render json: {top5: top5, all_ranked: all_ranked}, status: 400;
+      render json: {top5: top5, all_ranked: all_ranked, code: info[:code]}, status: info[:code]
     end
   end
 
@@ -43,9 +34,6 @@ class StatsRankedController < ApplicationController
       response = JSON.parse(open(url).read)
       if not response.empty?
         summoner.stats_rankeds.destroy_all
-        puts "testing here -------------"
-        puts response['champions'][0]['stats']['totalChampionKills']
-        puts response['champions'][0]['stats']['totalSessionsPlayed']
 
         response['champions'].each do |champion|
           if champion['id'] == 0
@@ -77,13 +65,15 @@ class StatsRankedController < ApplicationController
                                        win_rate: (champion['stats']['totalSessionsWon']/(champion['stats']['totalSessionsPlayed'] + 0.0)).round(4))
         end
       end
-      return true
+      return {success: true}
     rescue OpenURI::HTTPError => e
-      case rescue_me(e)
-      when 1
-        retry
-      when 2
-        return false
+      case e.io.status[0]
+      when "429"
+        return {success: false, code: "tooMany", status: 429}
+      when "404"
+        return {success: false, code: "notFound", status: 404}
+      else
+        return {success: false, code: "serviceError", status: 400}
       end
     end
   end

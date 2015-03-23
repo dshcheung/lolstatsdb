@@ -1,25 +1,22 @@
 class StatsSummaryController < ApplicationController
   include ApplicationHelper
-  
+
   def get_stats_summary
     summoner = Summoner.find_by(summonerId: params['id'].to_i, region: params['region'].to_s)
     if summoner[:stats_summary].nil?
-      if update_stats_summary(params['id'], params['region'], summoner)
-        render json: {stats_summary: summoner[:stats_summary]}
-      else
-        render json: {stats_summary: summoner[:stats_summary]}, status: 400
-      end
+      renew_stats_summary
     else
-      render json: {stats_summary: summoner[:stats_summary]}
+      render json: {stats_summary: summoner[:stats_summary]}, status: 200
     end
   end
 
   def renew_stats_summary
     summoner = Summoner.find_by(summonerId: params['id'], region: params['region'])
-    if update_stats_summary(params['id'], params['region'], summoner)
-      render json: {stats_summary: summoner[:stats_summary]}
+    info = update_stats_summary(params['id'], params['region'], summoner)
+    if info[:success]
+      render json: info, status: 200
     else
-      render json: {stats_summary: summoner[:stats_summary]}, status: 400
+      render json: info, status: 400
     end
   end
 
@@ -56,30 +53,34 @@ class StatsSummaryController < ApplicationController
       response = JSON.parse(open(url).read)
       if not response.empty?
         game = response["playerStatSummaries"]
-        for i in 0..game.length - 1
-          game_type = game[i]["playerStatSummaryType"]
-          if game_type == "RankedTeam5x5"
-            stats[:rank_team5][:stats] = game[i]
-          elsif game_type == "RankedSolo5x5"
-            stats[:rank_solo5][:stats] = game[i]
-          elsif game_type == "RankedTeam3x3"
-            stats[:rank_team3][:stats] = game[i]
-          elsif game_type == "Unranked"
-            stats[:normal_team5][:stats] = game[i]
-          elsif game_type == "Unranked3x3"
-            stats[:normal_team3][:stats] = game[i]
+        if game != nil
+          for i in 0..game.length - 1
+            game_type = game[i]["playerStatSummaryType"]
+            if game_type == "RankedTeam5x5"
+              stats[:rank_team5][:stats] = game[i]
+            elsif game_type == "RankedSolo5x5"
+              stats[:rank_solo5][:stats] = game[i]
+            elsif game_type == "RankedTeam3x3"
+              stats[:rank_team3][:stats] = game[i]
+            elsif game_type == "Unranked"
+              stats[:normal_team5][:stats] = game[i]
+            elsif game_type == "Unranked3x3"
+              stats[:normal_team3][:stats] = game[i]
+            end
           end
         end
         summoner.update(stats_summary: stats)
       end
-      return true
+      return {success: true, stats_summary: stats}
     rescue OpenURI::HTTPError => e
-      case rescue_me(e)
-      when 1
-        retry
-      when 2
+      case e.io.status[0]
+      when "429"
+        return {success: false, code: "tooMany", stats_summary: stats}
+      when "404"
         summoner.update(stats_summary: stats)
-        return false
+        return {success: false, code: "notFound", stats_summary: stats}
+      else 
+        return {success: false, code: "serviceError", stats_summary: stats}
       end
     end
   end
